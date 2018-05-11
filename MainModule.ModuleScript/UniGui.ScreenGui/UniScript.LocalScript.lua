@@ -230,8 +230,6 @@ end
 
 local Visible
 
-Gui.InOut.Text = "<"
-
 Gui.Position = UDim2.new( 1, 0, 0.2, 0 )
 
 Gui.Search.PlaceholderText = "Search.."
@@ -244,11 +242,9 @@ end )
 
 local Populated
 
-Gui:WaitForChild( "InOut" ).MouseButton1Click:Connect( function ( )
+if Gui:FindFirstChild( "AutoVisible" ) then
 	
-	Visible = not Visible
-	
-	Gui.InOut.Text = Visible and ">" or "<"
+	Visible = true
 	
 	if not Populated then
 		
@@ -258,6 +254,26 @@ Gui:WaitForChild( "InOut" ).MouseButton1Click:Connect( function ( )
 		
 	end
 	
-	Gui:TweenPosition( Visible and UDim2.new( 0.8, 0, 0.2, 0 ) or UDim2.new( 1, 0, 0.2, 0 ), nil, nil, .5, true )
+else
 	
-end )
+	Gui.InOut.Text = "<"
+
+	Gui.InOut.MouseButton1Click:Connect( function ( )
+
+		Visible = not Visible
+
+		Gui.InOut.Text = Visible and ">" or "<"
+
+		if not Populated then
+
+			Populated = true
+
+			PopulateScroll( )
+
+		end
+
+		Gui:TweenPosition( Visible and UDim2.new( 0.8, 0, 0.2, 0 ) or UDim2.new( 1, 0, 0.2, 0 ), nil, nil, .5, true )
+
+	end )
+	
+end
