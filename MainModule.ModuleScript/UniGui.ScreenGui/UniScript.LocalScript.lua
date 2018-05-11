@@ -242,19 +242,7 @@ end )
 
 local Populated
 
-if Gui:FindFirstChild( "AutoVisible" ) then
-	
-	Visible = true
-	
-	if not Populated then
-		
-		Populated = true
-		
-		PopulateScroll( )
-		
-	end
-	
-else
+if Gui:FindFirstChild( "InOut" ) then
 	
 	Gui.InOut.Text = "<"
 
@@ -275,5 +263,17 @@ else
 		Gui:TweenPosition( Visible and UDim2.new( 0.8, 0, 0.2, 0 ) or UDim2.new( 1, 0, 0.2, 0 ), nil, nil, .5, true )
 
 	end )
+	
+else
+	
+	Visible = true
+	
+	if not Populated then
+		
+		Populated = true
+		
+		PopulateScroll( )
+		
+	end
 	
 end
