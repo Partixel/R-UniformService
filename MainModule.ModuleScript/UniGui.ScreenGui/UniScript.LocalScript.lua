@@ -126,7 +126,9 @@ function PopulateScroll( )
 		
 		if not Shirt and not TShirt then
 			
-			New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( GetNormShirt( ) or GetNormPants( ) or GetNormTShirt( ) )
+			New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
+			
+			New.ImageLabel.Image = "rbxassetid://" .. ( GetNormShirt( ) or GetNormPants( ) or GetNormTShirt( ) or "" )
 			
 		end
 		
