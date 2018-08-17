@@ -26,6 +26,8 @@ script.Name = "UniDatabase"
 
 script.Parent = game:GetService( "ServerStorage" )
 
+require( ( game:GetService( "ServerStorage" ):FindFirstChild( "ThemeUtil" ) or { } ).MainModule or 2230572960 )
+
 return {
 	
 	[ 165491 ] = {
