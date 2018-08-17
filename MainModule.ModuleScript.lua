@@ -60,37 +60,27 @@ return {
 		
 	},
 	
-	[ 244199 ] = {
+	[ 4187067 ] = {
 		
-		Name = "The Robloxian Army Military Police",
+		Name = "The Robloxian Army Ultramarines",
 		
-		{ { 363372931, 363373024 } }
-		
-	},
-	
-	[ 280058 ] = {
-		
-		Name = "TRA Combat Medics",
-		
-		{ { nil, nil, 69936217 } }
+		[ 25 ] = { { 2184462266, 2184463517 } }
 		
 	},
 	
-	[ 186633 ] = {
+	[ 4187069 ] = {
 		
-		Name = "The Robloxian Army elites",
+		Name = "The Robloxian Army Raven Guard",
 		
-		[ 1 ] = { Soldier = { 109856329, 109853254 }, Snow = { 318464386, 318464439 }, Winter = { 192749516, 192749746 }, Jungle = { 153542313, 153541973 }, Bricktops = { 119194717, 119194772 }, Narrowgill = { 119194611, 119194657 } },
-		
-		[ 100 ] = { Operator = { 141144179, 109853254 } }
+		[ 2 ] = { { 2197618690, 2197620842 } }
 		
 	},
 	
-	[ 3331733 ] = {
+	[ 4187068 ] = {
 		
-		Name = "The Robloxian Army Gladiators",
+		Name = "The Robloxian Army Blood Angels",
 		
-		{ { 941576094, 941575237 } }
+		[ 14 ] = { { 2188093932, 2184508023 } }
 		
 	},
 	
