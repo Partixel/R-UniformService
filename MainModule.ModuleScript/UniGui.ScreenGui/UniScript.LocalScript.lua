@@ -1,3 +1,17 @@
+local ThemeUtil = require( game:GetService( "ReplicatedStorage" ):WaitForChild( "ThemeUtil" ) )
+
+ThemeUtil.BindUpdate( script.Parent.Frame, "BackgroundColor3", "Background" )
+
+ThemeUtil.BindUpdate( { script.Parent.Frame.Search, script.Parent.Frame.ScrollingFrame, script.Parent.Frame.Title }, "BackgroundColor3", { "SecondaryBackground", "InvertedBackground" } )
+
+ThemeUtil.BindUpdate( { script.Parent.Frame.Search, script.Parent.Frame.Title }, "TextColor3", { "TextColor", "InvertedBackground" } )
+
+ThemeUtil.BindUpdate( script.Parent.Frame.Search, "BorderColor3", { "SecondaryBackground", "InvertedBackground" } )
+
+ThemeUtil.BindUpdate( script.Parent.Frame.Search, "PlaceholderColor3", { "SecondaryTextColor", "InvertedTextColor" } )
+
+ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, "ScrollBarImageColor3", "Background" )
+
 local Players = game:GetService( "Players" )
 
 local Plr = Players.LocalPlayer
@@ -92,7 +106,15 @@ function PopulateScroll( )
 		
 		local New = Base:Clone( )
 		
-		ScrFr.CanvasSize = UDim2.new( 0, 0, 0, 5 + ( 55 * a ) )
+		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+		
+		ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+		
+		ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "Background" )
+		
+		ThemeUtil.BindUpdate( New.Title, "BorderColor3", "Background" )
+		
+		ScrFr.CanvasSize = UDim2.new( 0, 0, 0, 3 + 47 * a )
 		
 		Buttons[ #Buttons + 1 ] = New
 		
@@ -102,7 +124,7 @@ function PopulateScroll( )
 		
 		if Selected == Keys[ a ] or ( SelectedTShirt == Keys[ a ] and Keys[ a ] ) then
 			
-			New.BorderSizePixel = 5
+			New.BackgroundTransparency = 0
 			
 		end
 		
@@ -142,13 +164,13 @@ function PopulateScroll( )
 				
 				if ScrFr:FindFirstChild( tostring( Selected ) ) then
 					
-					ScrFr:FindFirstChild( tostring( Selected ) ).BorderSizePixel = 0
+					ScrFr:FindFirstChild( tostring( Selected ) ).BackgroundTransparency = 1
 					
 				end
 				
 				if ScrFr:FindFirstChild( tostring( SelectedTShirt ) ) then
 					
-					ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BorderSizePixel = 0
+					ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BackgroundTransparency = 1
 					
 				end
 				
@@ -156,13 +178,13 @@ function PopulateScroll( )
 					
 					Selected, SelectedTShirt = nil, nil
 					
-					ScrFr:FindFirstChild( "false" ).BorderSizePixel = 0
+					ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 1
 					
 				else
 					
 					Selected, SelectedTShirt = false, false
 					
-					ScrFr:FindFirstChild( "false" ).BorderSizePixel = 5
+					ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 0
 					
 				end
 				
@@ -172,7 +194,7 @@ function PopulateScroll( )
 					
 					if ScrFr:FindFirstChild( tostring( Selected ) ) then
 						
-						ScrFr:FindFirstChild( tostring( Selected ) ).BorderSizePixel = 0
+						ScrFr:FindFirstChild( tostring( Selected ) ).BackgroundTransparency = 1
 						
 					end
 					
@@ -180,11 +202,11 @@ function PopulateScroll( )
 					
 					if Selected == false then
 						
-						ScrFr:FindFirstChild( "false" ).BorderSizePixel = 5
+						ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 0
 						
 					end
 					
-					New.BorderSizePixel = Selected == Keys[ a ] and 5
+					New.BackgroundTransparency = Selected == Keys[ a ] and 0 or 1
 					
 				end
 				
@@ -192,7 +214,7 @@ function PopulateScroll( )
 					
 					if ScrFr:FindFirstChild( tostring( SelectedTShirt ) ) then
 						
-						ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BorderSizePixel = 0
+						ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BackgroundTransparency = 1
 						
 					end
 					
@@ -200,11 +222,11 @@ function PopulateScroll( )
 					
 					if SelectedTShirt == false then
 						
-						ScrFr:FindFirstChild( "false" ).BorderSizePixel = 5
+						ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 1
 						
 					end
 					
-					New.BorderSizePixel = SelectedTShirt == Keys[ a ] and 5
+					New.BackgroundTransparency = SelectedTShirt == Keys[ a ] and 0 or 1
 					
 				end
 				
@@ -245,6 +267,10 @@ end )
 local Populated
 
 if Gui:FindFirstChild( "InOut" ) then
+	
+	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, "BackgroundColor3", "Background" )
+	
+	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, "TextColor3", { "TextColor", "InvertedBackground" } )
 	
 	Gui.InOut.Text = "<"
 
