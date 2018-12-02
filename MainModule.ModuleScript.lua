@@ -82,7 +82,7 @@ return {
 		
 		Name = "The Robloxian Army Blood Angels",
 		
-		[ 14 ] = { { 2188093932, 2184508023 } }
+		[ 14 ] = { { 2184508023, 2184508023 } }
 		
 	},
 	
