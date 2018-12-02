@@ -271,7 +271,7 @@ function GetUni.OnServerInvoke( Plr )
 			
 		end
 		
-		t = t:sub( 1, t:len( ) - 2 )
+		t = t:sub( 1, -3 )
 		
 		print( t )
 		
