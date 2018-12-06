@@ -1,5 +1,3 @@
-game:GetService( "ServerScriptService" ):WaitForChild( "UniformService" ):Destroy( )
-
 script:WaitForChild( "UniformService" ).Parent = game:GetService( "ServerScriptService" )
 
 if not game:GetService( "StarterGui" ):FindFirstChild( "UniGui" ) then
