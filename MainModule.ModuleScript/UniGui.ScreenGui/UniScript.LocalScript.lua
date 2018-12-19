@@ -2,15 +2,13 @@ local ThemeUtil = require( game:GetService( "ReplicatedStorage" ):WaitForChild( 
 
 ThemeUtil.BindUpdate( script.Parent.Frame, "BackgroundColor3", "Background" )
 
-ThemeUtil.BindUpdate( { script.Parent.Frame.Search, script.Parent.Frame.ScrollingFrame, script.Parent.Frame.Title }, "BackgroundColor3", { "SecondaryBackground", "InvertedBackground" } )
+ThemeUtil.BindUpdate( script.Parent.Frame.Search, { "BackgroundColor3", "BorderColor3" }, { "SecondaryBackground", "InvertedBackground" } )
 
-ThemeUtil.BindUpdate( { script.Parent.Frame.Search, script.Parent.Frame.Title }, "TextColor3", { "TextColor", "InvertedBackground" } )
-
-ThemeUtil.BindUpdate( script.Parent.Frame.Search, "BorderColor3", { "SecondaryBackground", "InvertedBackground" } )
+ThemeUtil.BindUpdate( script.Parent.Frame.Search, "TextColor3", { "TextColor", "InvertedBackground" } )
 
 ThemeUtil.BindUpdate( script.Parent.Frame.Search, "PlaceholderColor3", { "SecondaryTextColor", "InvertedTextColor" } )
 
-ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, "ScrollBarImageColor3", "Background" )
+ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, "ScrollBarImageColor3", "SecondaryBackground" )
 
 local Players = game:GetService( "Players" )
 
@@ -96,8 +94,6 @@ function PopulateScroll( )
 	
 	Keys[ #Keys + 1 ] = false
 	
-	Buttons = { }
-	
 	for a = 1, #Keys do
 		
 		local Uni = Unis[ Keys[ a ] ] or { }
@@ -110,13 +106,9 @@ function PopulateScroll( )
 		
 		ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
 		
-		ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "Background" )
+		ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
 		
-		ThemeUtil.BindUpdate( New.Title, "BorderColor3", "Background" )
-		
-		ScrFr.CanvasSize = UDim2.new( 0, 0, 0, 3 + 47 * a )
-		
-		Buttons[ #Buttons + 1 ] = New
+		ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
 		
 		New.Name = tostring( Keys[ a ] )
 		
@@ -125,6 +117,10 @@ function PopulateScroll( )
 		if Selected == Keys[ a ] or ( SelectedTShirt == Keys[ a ] and Keys[ a ] ) then
 			
 			New.BackgroundTransparency = 0
+			
+			New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+			
+			New.UIPadding.PaddingRight = UDim.new( 0, 5 )
 			
 		end
 		
@@ -240,15 +236,11 @@ function PopulateScroll( )
 			
 		end )
 		
-	end
-	
-	for a = 1, #Buttons do
-		
-		Buttons[ a ].Parent = ScrFr
+		New.Parent = ScrFr
 		
 	end
 	
-	Buttons = nil
+	ScrFr.CanvasSize = UDim2.new( 0, 0, 0, ScrFr.UIListLayout.AbsoluteContentSize.Y )
 	
 end
 
