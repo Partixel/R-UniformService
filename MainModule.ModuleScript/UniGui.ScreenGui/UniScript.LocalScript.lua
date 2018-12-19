@@ -256,8 +256,6 @@ local Visible
 
 Gui.Position = UDim2.new( 1, 0, 0.2, 0 )
 
-Gui.Search.PlaceholderText = "Search.."
-
 Gui.Search.Changed:Connect( function ( Prop )
 	
 	if Prop == "Text" then PopulateScroll( ) end
