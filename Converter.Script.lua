@@ -1,16 +1,16 @@
-if not game:GetService( "ServerStorage" ):FindFirstChild( "UniformService" ) then return end
+if not game:GetService( "ServerStorage" ):FindFirstChild( "Uniformed" ) then return end
 
-if not game:GetService( "ServerStorage" ).UniformService:FindFirstChild( "Cache" ) then
+if not game:GetService( "ServerStorage" ).Uniformed:FindFirstChild( "Cache" ) then
 	
 	local C = Instance.new( "ModuleScript" )
 	
 	C.Name = "Cache"
 	
-	C.Parent = game:GetService( "ServerStorage" ).UniformService
+	C.Parent = game:GetService( "ServerStorage" ).Uniformed
 	
 end
 
-local NewCache = game:GetService( "ServerStorage" ).UniformService.Cache
+local NewCache = game:GetService( "ServerStorage" ).Uniformed.Cache
 
 local Cache = game.HttpService:JSONDecode( NewCache.Source or "{}" )
 
@@ -21,7 +21,7 @@ local GS = game:GetService( "GroupService" )
 local button = toolbar:CreateButton( "Convert", "Press me", "" )
 button.Click:Connect(function()
 	
-	local s = game:GetService( "ServerStorage" ).UniformService.MainModule.Source
+	local s = game:GetService( "ServerStorage" ).Uniformed.MainModule.Source
 	
 	local b = 0
 	
@@ -91,7 +91,7 @@ button.Click:Connect(function()
 	
 	NewCache.Source = game.HttpService:JSONEncode( Cache )
 	
-	game:GetService( "ServerStorage" ).UniformService.MainModule.Source = s
+	game:GetService( "ServerStorage" ).Uniformed.MainModule.Source = s
 	
 	print( "Done" )
 	
