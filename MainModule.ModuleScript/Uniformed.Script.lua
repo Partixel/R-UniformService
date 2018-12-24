@@ -144,21 +144,15 @@ function GetGroups( UserId )
 	
 end
 
-function GetName( GroupName, ShirtName, TShirt )
+function GetName( ShirtName, TShirt )
 	
-	if type( ShirtName ) == "number" then
-		
-		return GroupName .. ( TShirt and " TShirt" or "" )
-		
-	else
-		
-		return GroupName .. ( TShirt and " TShirt" or "" ) .. ": " .. ShirtName
-		
-	end
+	return ( type( ShirtName ) ~= "number" and ( ShirtName .. ( TShirt and " TShirt" or "" )  ) or ( TShirt and "TShirt" or "Uniform" ) )
 	
 end
 
 Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil end )
+
+local Debug = false
 
 function GetUni.OnServerInvoke( Plr )
 	
@@ -166,7 +160,7 @@ function GetUni.OnServerInvoke( Plr )
 	
 	local Unis, Sel, TSel = { }
 	
-	if true then
+	if not Debug then
 		
 		for a, b in pairs( UGroups ) do
 			
@@ -234,7 +228,7 @@ function GetUni.OnServerInvoke( Plr )
 		
 	end
 	
-	if false then
+	if Debug then
 		
 		Unis = { }
 		
