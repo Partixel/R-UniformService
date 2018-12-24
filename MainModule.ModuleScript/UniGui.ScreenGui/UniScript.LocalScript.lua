@@ -22,33 +22,55 @@ local ChangeUni = game:GetService( "ReplicatedStorage" ):WaitForChild( "ChangeUn
 
 local Gui = script.Parent:WaitForChild( "Frame" )
 
+local Search, Base, ScrFr = Gui:WaitForChild( "Search" ), Gui:WaitForChild( "Base" ), Gui:WaitForChild( "ScrollingFrame" )
+
+local Hide = { }
+
+for a, b in pairs( Unis ) do
+	
+	if ( not Selected or Selected[ 1 ] ~= a ) and ( not SelectedTShirt or SelectedTShirt[ 1 ] ~= a ) then
+		
+		Hide[ a ] = true
+		
+	end
+	
+end
+
 function GetMatchingKeys( T, Str )
 	
 	local Tmp = { }
 	
 	for a, b in pairs( T ) do
 		
-		if a:lower( ):find( Str:lower( ) ) and a ~= Selected and a ~= SelectedTShirt then
+		local Category
+		
+		for c, d in pairs( b ) do
 			
-			Tmp[ #Tmp + 1 ] = a
+			local Name = ( a .. " " .. c ):lower( )
+			
+			if Name:find( Str ) then
+				
+				if not Category then
+					
+					Category = { Name = a }
+					
+					Tmp[ #Tmp + 1 ] = Category
+					
+				end
+				
+				Category[ #Category + 1 ] = c
+				
+			end
 			
 		end
 		
 	end
 	
-	table.sort( Tmp )
-	
-	if SelectedTShirt then
+	table.sort( Tmp, function( a, b )
 		
-		table.insert( Tmp, 1, SelectedTShirt )
+		return a.Name < b.Name
 		
-	end
-	
-	if Selected then
-		
-		table.insert( Tmp, 1, Selected )
-		
-	end
+	end )
 	
 	return Tmp
 	
@@ -76,8 +98,6 @@ end
 
 function PopulateScroll( )
 	
-	local Search, Base, ScrFr = Gui:WaitForChild( "Search" ), Gui:WaitForChild( "Base" ), Gui:WaitForChild( "ScrollingFrame" )
-	
 	local Buttons = ScrFr:GetChildren( )
 	
 	for a = 1, #Buttons do
@@ -90,153 +110,139 @@ function PopulateScroll( )
 		
 	end
 	
-	local Keys = GetMatchingKeys( Unis, Search.Text )
+	local Keys = GetMatchingKeys( Unis, Search.Text:lower( ) )
 	
-	Keys[ #Keys + 1 ] = false
+	local Cur = 2
 	
 	for a = 1, #Keys do
 		
-		local Uni = Unis[ Keys[ a ] ] or { }
+		Cur = Cur + 1
 		
-		local Shirt, TShirt = Uni[ 1 ] ~= nil, Uni[ 3 ] ~= nil
+		local Cat = Gui.Category:Clone( )
 		
-		local New = Base:Clone( )
+		ThemeUtil.BindUpdate( { Cat, Cat.Bar, Cat.OpenIndicator, Cat.TitleText }, "BackgroundColor3", "SecondaryBackground" )
 		
-		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+		ThemeUtil.BindUpdate( { Cat, Cat.OpenIndicator, Cat.TitleText }, "TextColor3", "TextColor" )
 		
-		ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+		Cat.Visible = true
 		
-		ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
+		Cat.LayoutOrder = Cur
 		
-		ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+		Cat.OpenIndicator.Text = not Hide[ Keys[ a ].Name ] and  "Λ" or "V"
 		
-		New.Name = tostring( Keys[ a ] )
+		Cat.TitleText.Text = Keys[ a ].Name
 		
-		New.LayoutOrder = a
-		
-		if Selected == Keys[ a ] or ( SelectedTShirt == Keys[ a ] and Keys[ a ] ) then
+		Cat.MouseButton1Click:Connect( function ( )
 			
-			New.BackgroundTransparency = 0
-			
-			New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
-			
-			New.UIPadding.PaddingRight = UDim.new( 0, 5 )
-			
-		end
-		
-		if Shirt then
-			
-			New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
-			
-		end
-		
-		if TShirt then
-			
-			New.BorderColor3 = Color3.fromRGB( 100, 200, 100 )
-			
-			New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. Uni[ 3 ]
-			
-			New.ImageLabel.ImageRectOffset = Vector2.new( 0, 0 )
-			
-			New.ImageLabel.ImageRectSize = Vector2.new( 0, 0 )
-			
-		end
-		
-		if not Shirt and not TShirt then
-			
-			New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
-			
-			New.ImageLabel.Image = "rbxassetid://" .. ( GetNormShirt( ) or GetNormPants( ) or GetNormTShirt( ) or "" )
-			
-		end
-		
-		New:WaitForChild( "Title" ).Text = Keys[ a ] or "None"
-		
-		New.Visible = true
-		
-		New.MouseButton1Click:Connect( function ( )
-			
-			if Keys[ a ] == false then
-				
-				if ScrFr:FindFirstChild( tostring( Selected ) ) then
-					
-					ScrFr:FindFirstChild( tostring( Selected ) ).BackgroundTransparency = 1
-					
-				end
-				
-				if ScrFr:FindFirstChild( tostring( SelectedTShirt ) ) then
-					
-					ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BackgroundTransparency = 1
-					
-				end
-				
-				if Selected == false and SelectedTShirt == false then
-					
-					Selected, SelectedTShirt = nil, nil
-					
-					ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 1
-					
-				else
-					
-					Selected, SelectedTShirt = false, false
-					
-					ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 0
-					
-				end
-				
-			else
-				
-				if Shirt then
-					
-					if ScrFr:FindFirstChild( tostring( Selected ) ) then
-						
-						ScrFr:FindFirstChild( tostring( Selected ) ).BackgroundTransparency = 1
-						
-					end
-					
-					Selected = Selected ~= Keys[ a ] and Keys[ a ] or false
-					
-					if Selected == false then
-						
-						ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 0
-						
-					end
-					
-					New.BackgroundTransparency = Selected == Keys[ a ] and 0 or 1
-					
-				end
-				
-				if TShirt then
-					
-					if ScrFr:FindFirstChild( tostring( SelectedTShirt ) ) then
-						
-						ScrFr:FindFirstChild( tostring( SelectedTShirt ) ).BackgroundTransparency = 1
-						
-					end
-					
-					SelectedTShirt = SelectedTShirt ~= Keys[ a ] and Keys[ a ] or false
-					
-					if SelectedTShirt == false then
-						
-						ScrFr:FindFirstChild( "false" ).BackgroundTransparency = 1
-						
-					end
-					
-					New.BackgroundTransparency = SelectedTShirt == Keys[ a ] and 0 or 1
-					
-				end
-				
-			end
-			
-			local ShirtUni, TShirtUni = Unis[ Selected ] or { }, Unis[ SelectedTShirt ] or { }
-			
-			ChangeUni:FireServer( Selected, SelectedTShirt, { ShirtUni[ 1 ], ShirtUni[ 2 ], TShirtUni[ 3 ] } )
+			Hide[ Keys[ a ].Name ] = not Hide[ Keys[ a ].Name ]
 			
 			PopulateScroll( )
 			
 		end )
 		
-		New.Parent = ScrFr
+		Cat.Parent = ScrFr
+		
+		if not Hide[ Keys[ a ].Name ] then
+			
+			for b = 1, #Keys[ a ] do
+				
+				Cur = Cur + 1
+				
+				local Uni = Unis[ Keys[ a ].Name ][ Keys[ a ][ b ] ] or { }
+				
+				local Shirt, TShirt = Uni[ 1 ] ~= nil, Uni[ 3 ] ~= nil
+				
+				local New = Base:Clone( )
+				
+				ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+				
+				ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+				
+				ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
+				
+				ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+				
+				New.Name = Keys[ a ].Name .. ": " .. Keys[ a ][ b ]
+				
+				New.LayoutOrder = Cur
+				
+				if ( Selected and Selected[ 1 ] == Keys[ a ].Name and Selected[ 2 ] == Keys[ a ][ b ] ) or ( SelectedTShirt and SelectedTShirt and SelectedTShirt[ 1 ] == Keys[ a ].Name and SelectedTShirt[ 2 ] == Keys[ a ][ b ] ) then
+					
+					New.BackgroundTransparency = 0
+					
+					New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+					
+					New.UIPadding.PaddingRight = UDim.new( 0, 5 )
+					
+				end
+				
+				if Shirt then
+					
+					New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
+					
+				end
+				
+				if TShirt then
+					
+					New.BorderColor3 = Color3.fromRGB( 100, 200, 100 )
+					
+					New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. Uni[ 3 ]
+					
+					New.ImageLabel.ImageRectOffset = Vector2.new( 0, 0 )
+					
+					New.ImageLabel.ImageRectSize = Vector2.new( 0, 0 )
+					
+				end
+				
+				New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
+				
+				New:WaitForChild( "Title" ).Text = Keys[ a ][ b ]
+				
+				New.Visible = true
+				
+				New.MouseButton1Click:Connect( function ( )
+					
+					if Shirt then
+						
+						if Selected and ScrFr:FindFirstChild( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) then
+							
+							ScrFr:FindFirstChild( Selected[ 1 ] .. ": " .. Selected[ 2 ] ).BackgroundTransparency = 1
+							
+						end
+						
+						Selected = ( not Selected or ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) ~= New.Name ) and { Keys[ a ].Name, Keys[ a ][ b ] } or false
+						
+						New.BackgroundTransparency = Selected == Keys[ a ] and 0 or 1
+						
+					end
+					
+					if TShirt then
+						
+						if SelectedTShirt and ScrFr:FindFirstChild( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) then
+							
+							ScrFr:FindFirstChild( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ).BackgroundTransparency = 1
+							
+						end
+						
+						SelectedTShirt = ( not SelectedTShirt or ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) ~= New.Name ) and { Keys[ a ].Name, Keys[ a ][ b ] } or false
+						
+						New.BackgroundTransparency = SelectedTShirt == Keys[ a ] and 0 or 1
+						
+					end
+					
+					local ShirtUni, TShirtUni = Selected and Unis[ Selected[ 1 ] ][ Selected[ 2 ] ] or { }, SelectedTShirt and Unis[ SelectedTShirt[ 1 ] ][ SelectedTShirt[ 2 ] ] or { }
+					
+					ChangeUni:FireServer( Selected, SelectedTShirt, { ShirtUni[ 1 ], ShirtUni[ 2 ], TShirtUni[ 3 ] } )
+					
+					PopulateScroll( )
+					
+				end )
+				
+				New.Parent = ScrFr
+				
+			end
+			
+		end
 		
 	end
 	

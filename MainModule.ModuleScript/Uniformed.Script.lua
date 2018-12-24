@@ -176,7 +176,7 @@ function GetUni.OnServerInvoke( Plr )
 					
 					if R[ F ][ 1 ] == nil then
 						
-						TSel = GetName( b.Name, F, true )
+						TSel = { b.Name, GetName( F, true ) }
 						
 						repeat
 							
@@ -192,9 +192,11 @@ function GetUni.OnServerInvoke( Plr )
 						
 					end
 					
-					Sel = GetName( b.Name, F )
+					Sel = { b.Name, GetName( F ) }
 					
 				end
+				
+				Unis[ b.Name ] = Unis[ b.Name ] or { }
 				
 				for c, d in pairs( Groups[ b.Id ] ) do
 					
@@ -204,15 +206,7 @@ function GetUni.OnServerInvoke( Plr )
 							
 							for e, f in pairs( d ) do
 								
-								if f[ 1 ] then
-									
-									Unis[ GetName( b.Name, e ) ] = f
-									
-								else
-									
-									Unis[ GetName( b.Name, e, true ) ] = f
-									
-								end
+								Unis[ b.Name ][ GetName( e, not f[ 1 ] ) ] = f
 								
 							end
 							
@@ -239,7 +233,9 @@ function GetUni.OnServerInvoke( Plr )
 			local Name = b.Name or game:GetService( "GroupService" ):GetGroupInfoAsync( a ).Name
 			t = t .. Name .. ", "
 			
-			if b.Name ~= Name then print( a .. " -" .. Name .. "- is not optimised!" ) end
+			if b.Name ~= Name then warn( a .. " -" .. Name .. "- is not optimised!" ) end
+			
+			Unis[ b.Name ] = Unis[ b.Name ] or { }
 			
 			for c, d in pairs( b ) do
 				
@@ -247,15 +243,7 @@ function GetUni.OnServerInvoke( Plr )
 					
 					for c, d in pairs( d ) do
 						
-						if d[ 1 ] then
-							
-							Unis[ GetName( Name, c ) ] = d
-							
-						else
-							
-							Unis[ GetName( Name, c, true ) ] = d
-							
-						end
+						Unis[ b.Name ][ GetName( c, not d[ 1 ] ) ] = d
 						
 					end
 					
@@ -273,15 +261,21 @@ function GetUni.OnServerInvoke( Plr )
 	
 	local Data = DataStore:GetAsync( Plr.UserId ) or { }
 	
-	if type( Data[ 1 ] ) == "table" or type( Data[ 2 ] ) == "table" then
+	if Data[ 1 ] and ( not Unis[ Data[ 1 ][ 1 ] ] or not Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] ) then
 		
-		Data = { }
-		
-		pcall( function ( ) DataStore:SetAsync( Plr.UserId, { } ) end )
+		Data[ 1 ] = nil
 		
 	end
 	
-	local Shirt, TShirt = Unis[ Data[ 1 ] == nil and Sel or ( Data[ 1 ] and Data[ 1 ] ) ] or { }, Unis[ Data[ 2 ] == nil and TSel or ( Data[ 2 ] and Data[ 2 ] ) ] or { }
+	if Data[ 2 ] and ( not Unis[ Data[ 2 ][ 1 ] ] or not Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] ) then
+		
+		Data[ 2 ] = nil
+		
+	end
+	
+	Sel, TSel = Data[ 1 ] == nil and Sel or Data[ 1 ], Data[ 2 ] == nil and TSel or Data[ 2 ]
+	
+	local Shirt, TShirt = Sel and Unis[ Sel[ 1 ] ][ Sel[ 2 ] ] or { }, TSel and Unis[ TSel[ 1 ] ][ TSel[ 2 ] ] or { }
 	
 	Selected[ Plr ] = { Shirt[ 1 ], Shirt[ 2 ], TShirt[ 3 ] }
 	
@@ -289,7 +283,7 @@ function GetUni.OnServerInvoke( Plr )
 	
 	Update( Plr, Plr.Character )
 	
-	return Unis, Data[ 1 ] == nil and Sel or ( Data[ 1 ] and Data[ 1 ] ), Data[ 2 ] == nil and TSel or ( Data[ 2 ] and Data[ 2 ] )
+	return Unis, Sel, TSel
 	
 end
 
@@ -297,13 +291,13 @@ GetUni.Name = "GetUni"
 
 local ChangeUni = Instance.new( "RemoteEvent", game:GetService( "ReplicatedStorage" ) )
 
-ChangeUni.OnServerEvent:Connect( function ( Plr, Name, TShirt, Ids )
+ChangeUni.OnServerEvent:Connect( function ( Plr, Shirt, TShirt, Ids )
 	
 	Selected[ Plr ] = Ids
 	
 	Update( Plr, Plr.Character )
 	
-	pcall( function ( ) DataStore:SetAsync( Plr.UserId, { Name, TShirt } ) end )
+	pcall( function ( ) DataStore:SetAsync( Plr.UserId, { Shirt, TShirt } ) end )
 	
 end )
 
