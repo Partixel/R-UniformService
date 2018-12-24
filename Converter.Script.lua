@@ -8,11 +8,13 @@ if not game:GetService( "ServerStorage" ).Uniformed:FindFirstChild( "Cache" ) th
 	
 	C.Parent = game:GetService( "ServerStorage" ).Uniformed
 	
+	C.Source = "{}"
+	
 end
 
 local NewCache = game:GetService( "ServerStorage" ).Uniformed.Cache
 
-local Cache = game.HttpService:JSONDecode( NewCache.Source or "{}" )
+local Cache = game.HttpService:JSONDecode( NewCache.Source )
 
 local toolbar = plugin:CreateToolbar( "ImageIdConverter" )
 
