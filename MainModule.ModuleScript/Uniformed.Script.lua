@@ -2,7 +2,7 @@ local GS = game:GetService( "GroupService" )
 
 local Groups = require( game:GetService( "ServerStorage" ):WaitForChild( "UniDatabase" ) )
 
-local Ran, DataStore = pcall( game:GetService( "DataStoreService" ).GetDataStore, game:GetService( "DataStoreService" ), "UniformService" )
+local Ran, DataStore = pcall( game:GetService( "DataStoreService" ).GetDataStore, game:GetService( "DataStoreService" ), "Uniformed" )
 
 if not Ran or type( DataStore ) ~= "userdata" or not pcall( function ( ) DataStore:GetAsync( "Test" ) end ) then
 	
