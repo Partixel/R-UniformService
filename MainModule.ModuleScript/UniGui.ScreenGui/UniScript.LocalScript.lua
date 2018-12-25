@@ -16,7 +16,7 @@ local Plr = Players.LocalPlayer
 
 local UserId = Plr.UserId < 0 and 16015142 or Plr.UserId
 
-local Unis, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "GetUni" ):InvokeServer( )
+local Unis, DefaultUni, DefaultTShirt, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "GetUni" ):InvokeServer( )
 
 local ChangeUni = game:GetService( "ReplicatedStorage" ):WaitForChild( "ChangeUni" )
 
@@ -26,9 +26,12 @@ local Search, Base, ScrFr = Gui:WaitForChild( "Search" ), Gui:WaitForChild( "Bas
 
 local Hide = { }
 
+local SelectedGroup, SelectedTShirtGroup = Selected and Selected[ 1 ] or Selected == nil and ( DefaultUni and DefaultUni[ 1 ] ) or nil, SelectedTShirt and SelectedTShirt[ 1 ] or SelectedTShirt == nil and ( DefaultTShirt and DefaultTShirt[ 1 ] ) or nil
+
+
 for a, b in pairs( Unis ) do
 	
-	if ( not Selected or Selected[ 1 ] ~= a ) and ( not SelectedTShirt or SelectedTShirt[ 1 ] ~= a ) then
+	if ( Selected == false or SelectedGroup ~= a ) and ( SelectedTShirt == false or SelectedTShirtGroup ~= a ) then
 		
 		Hide[ a ] = true
 		
@@ -110,9 +113,95 @@ function PopulateScroll( )
 		
 	end
 	
+	local SelectedName, SelectedTShirtName = Selected and ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) or Selected == nil and ( DefaultUni and DefaultUni[ 1 ] .. ": " .. DefaultUni[ 2 ] ) or "false", SelectedTShirt and ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) or SelectedTShirt == nil and ( DefaultTShirt and DefaultTShirt[ 1 ] .. ": " .. DefaultTShirt[ 2 ] ) or "false"
+	
 	local Keys = GetMatchingKeys( Unis, Search.Text:lower( ) )
 	
-	local Cur = 2
+	local New = Base:Clone( )
+	
+	ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+	
+	ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+	
+	ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
+	
+	ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+	
+	New.Name = "false"
+	
+	New.LayoutOrder = 1
+	
+	if Selected == false and SelectedTShirt == false then
+		
+		New.BackgroundTransparency = 0
+		
+		New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+		
+		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
+		
+	end
+	
+	New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
+	
+	New.ImageLabel.Image = "rbxassetid://" .. ( GetNormShirt( ) or GetNormPants( ) or GetNormTShirt( ) or "" )
+	
+	New:WaitForChild( "Title" ).Text = "None"
+	
+	New.Visible = true
+	
+	New.MouseButton1Click:Connect( function ( )
+		
+		if ScrFr:FindFirstChild( SelectedName ) then
+			
+			ScrFr:FindFirstChild( SelectedName ).BackgroundTransparency = 1
+			
+		end
+		
+		if ScrFr:FindFirstChild( SelectedTShirtName ) then
+			
+			ScrFr:FindFirstChild( SelectedTShirtName ).BackgroundTransparency = 1
+			
+		end
+		
+		local Sel = { }
+		
+		if Selected == false and SelectedTShirt == false then
+			
+			Selected = nil
+			
+			SelectedTShirt = nil
+			
+			if DefaultUni then
+				
+				Sel[ 1 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 1 ]
+				
+				Sel[ 2 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 2 ]
+				
+			end
+			
+			if DefaultTShirt then
+				
+				Sel[ 3 ] = Unis[ DefaultTShirt[ 1 ] ][ DefaultTShirt[ 2 ] ][ 3 ]
+				
+			end
+			
+		else
+			
+			Selected = false
+			
+			SelectedTShirt = false
+			
+		end
+		
+		ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
+		
+		PopulateScroll( )
+		
+	end )
+	
+	New.Parent = ScrFr
+	
+	local Cur = 1
 	
 	for a = 1, #Keys do
 		
@@ -154,8 +243,6 @@ function PopulateScroll( )
 				
 				local New = Base:Clone( )
 				
-				ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
-				
 				ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
 				
 				ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
@@ -166,13 +253,23 @@ function PopulateScroll( )
 				
 				New.LayoutOrder = Cur
 				
-				if ( Selected and Selected[ 1 ] == Keys[ a ].Name and Selected[ 2 ] == Keys[ a ][ b ] ) or ( SelectedTShirt and SelectedTShirt and SelectedTShirt[ 1 ] == Keys[ a ].Name and SelectedTShirt[ 2 ] == Keys[ a ][ b ] ) then
+				if SelectedName == New.Name or SelectedTShirtName == New.Name then
 					
 					New.BackgroundTransparency = 0
 					
 					New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
 					
 					New.UIPadding.PaddingRight = UDim.new( 0, 5 )
+					
+				end
+				
+				if ( Shirt and Selected == nil ) or ( TShirt and SelectedTShirt == nil ) then
+					
+					ThemeUtil.BindUpdate( New, "BackgroundColor3", { "PositiveColor", "InvertedBackground" } )
+					
+				else
+					
+					ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
 					
 				end
 				
@@ -204,35 +301,55 @@ function PopulateScroll( )
 					
 					if Shirt then
 						
-						if Selected and ScrFr:FindFirstChild( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) then
-							
-							ScrFr:FindFirstChild( Selected[ 1 ] .. ": " .. Selected[ 2 ] ).BackgroundTransparency = 1
-							
-						end
+						Selected = ( SelectedName ~= New.Name or Selected == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
 						
-						Selected = ( not Selected or ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) ~= New.Name ) and { Keys[ a ].Name, Keys[ a ][ b ] } or false
+					elseif SelectedTShirt == false then
 						
-						New.BackgroundTransparency = Selected == Keys[ a ] and 0 or 1
+						SelectedTShirt = nil
 						
 					end
 					
 					if TShirt then
 						
-						if SelectedTShirt and ScrFr:FindFirstChild( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) then
-							
-							ScrFr:FindFirstChild( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ).BackgroundTransparency = 1
-							
-						end
+						SelectedTShirt = ( SelectedTShirtName ~= New.Name or SelectedTShirt == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
 						
-						SelectedTShirt = ( not SelectedTShirt or ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) ~= New.Name ) and { Keys[ a ].Name, Keys[ a ][ b ] } or false
+					elseif SelectedTShirt == false then
 						
-						New.BackgroundTransparency = SelectedTShirt == Keys[ a ] and 0 or 1
+						SelectedTShirt = nil
 						
 					end
 					
-					local ShirtUni, TShirtUni = Selected and Unis[ Selected[ 1 ] ][ Selected[ 2 ] ] or { }, SelectedTShirt and Unis[ SelectedTShirt[ 1 ] ][ SelectedTShirt[ 2 ] ] or { }
+					local Sel = { }
 					
-					ChangeUni:FireServer( Selected, SelectedTShirt, { ShirtUni[ 1 ], ShirtUni[ 2 ], TShirtUni[ 3 ] } )
+					if Selected then
+						
+						Sel[ 1 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 1 ]
+						
+						Sel[ 2 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 2 ]
+						
+					elseif DefaultUni then
+						
+						Hide[ DefaultUni[ 1 ] ] = nil
+						
+						Sel[ 1 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 1 ]
+						
+						Sel[ 2 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 2 ]
+						
+					end
+					
+					if SelectedTShirt then
+						
+						Sel[ 3 ] = Unis[ SelectedTShirt[ 1 ] ][ SelectedTShirt[ 2 ] ][ 3 ]
+						
+					elseif DefaultTShirt then
+						
+						Hide[ DefaultTShirt[ 1 ] ] = nil
+						
+						Sel[ 3 ] = Unis[ DefaultTShirt[ 1 ] ][ DefaultTShirt[ 2 ] ][ 3 ]
+						
+					end
+					
+					ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
 					
 					PopulateScroll( )
 					

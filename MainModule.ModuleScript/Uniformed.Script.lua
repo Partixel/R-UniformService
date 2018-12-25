@@ -12,7 +12,7 @@ end
 
 local Players = game:GetService( "Players" )
 
-local Selected = { }
+local Selected, Normal = { }, { }
 
 function GetNormPants( UserId )
 	
@@ -150,7 +150,7 @@ function GetName( ShirtName, TShirt )
 	
 end
 
-Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil end )
+Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil Normal[ Plr ] = nil Loaded[ Plr ] = nil end )
 
 local Debug = false
 
@@ -158,7 +158,7 @@ function GetUni.OnServerInvoke( Plr )
 	
 	local UGroups = GetGroups( Plr.UserId < 0 and 16015142 or Plr.UserId )
 	
-	local Unis, Sel, TSel = { }
+	local Unis, DefaultUni, DefaultTShirt = { }
 	
 	if not Debug then
 		
@@ -176,7 +176,7 @@ function GetUni.OnServerInvoke( Plr )
 					
 					if R[ F ][ 1 ] == nil then
 						
-						TSel = { b.Name, GetName( F, true ) }
+						DefaultTShirt = { b.Name, GetName( F, true ) }
 						
 						repeat
 							
@@ -192,7 +192,7 @@ function GetUni.OnServerInvoke( Plr )
 						
 					end
 					
-					Sel = { b.Name, GetName( F ) }
+					DefaultUni = { b.Name, GetName( F ) }
 					
 				end
 				
@@ -259,23 +259,29 @@ function GetUni.OnServerInvoke( Plr )
 		
 	end
 	
+	local Shirt, TShirt = DefaultUni and Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ] or { }, DefaultTShirt and Unis[ DefaultTShirt[ 1 ] ][ DefaultTShirt[ 2 ] ] or { }
+	
+	Normal[ Plr ] = { Shirt[ 1 ], Shirt[ 2 ], TShirt[ 3 ] }
+	
 	local Data = DataStore:GetAsync( Plr.UserId ) or { }
 	
-	if Data[ 1 ] and ( not Unis[ Data[ 1 ][ 1 ] ] or not Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] ) then
+	local Sel, TSel
+	
+	if Data[ 1 ] and Unis[ Data[ 1 ][ 1 ] ] and Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] then
 		
-		Data[ 1 ] = nil
+		Sel = Data[ 1 ]
+		
+		Shirt = Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] or { }
 		
 	end
 	
-	if Data[ 2 ] and ( not Unis[ Data[ 2 ][ 1 ] ] or not Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] ) then
+	if Data[ 2 ] and Unis[ Data[ 2 ][ 1 ] ] and Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] then
 		
-		Data[ 2 ] = nil
+		TSel = Data[ 2 ]
+		
+		Shirt = Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] or { }
 		
 	end
-	
-	Sel, TSel = Data[ 1 ] == nil and Sel or Data[ 1 ], Data[ 2 ] == nil and TSel or Data[ 2 ]
-	
-	local Shirt, TShirt = Sel and Unis[ Sel[ 1 ] ][ Sel[ 2 ] ] or { }, TSel and Unis[ TSel[ 1 ] ][ TSel[ 2 ] ] or { }
 	
 	Selected[ Plr ] = { Shirt[ 1 ], Shirt[ 2 ], TShirt[ 3 ] }
 	
@@ -283,7 +289,7 @@ function GetUni.OnServerInvoke( Plr )
 	
 	Update( Plr, Plr.Character )
 	
-	return Unis, Sel, TSel
+	return Unis, DefaultUni, DefaultTShirt, Sel, TSel
 	
 end
 
