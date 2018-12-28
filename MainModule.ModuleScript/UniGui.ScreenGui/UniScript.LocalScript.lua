@@ -119,8 +119,6 @@ function PopulateScroll( )
 	
 	local New = Base:Clone( )
 	
-	ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
-	
 	ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
 	
 	ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
@@ -139,29 +137,29 @@ function PopulateScroll( )
 		
 		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
 		
+		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+		
+	elseif Selected == nil and DefaultUni == nil and SelectedTShirt == nil and DefaultTShirt == nil then
+		
+		New.BackgroundTransparency = 0
+		
+		New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+		
+		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
+		
+		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "PositiveColor", "InvertedBackground" } )
+		
 	end
 	
 	New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
 	
 	New.ImageLabel.Image = "rbxassetid://" .. ( GetNormShirt( ) or GetNormPants( ) or GetNormTShirt( ) or "" )
 	
-	New:WaitForChild( "Title" ).Text = "None"
+	New.Title.Text = "None"
 	
 	New.Visible = true
 	
 	New.MouseButton1Click:Connect( function ( )
-		
-		if ScrFr:FindFirstChild( SelectedName ) then
-			
-			ScrFr:FindFirstChild( SelectedName ).BackgroundTransparency = 1
-			
-		end
-		
-		if ScrFr:FindFirstChild( SelectedTShirtName ) then
-			
-			ScrFr:FindFirstChild( SelectedTShirtName ).BackgroundTransparency = 1
-			
-		end
 		
 		local Sel = { }
 		
@@ -293,7 +291,7 @@ function PopulateScroll( )
 				
 				New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
 				
-				New:WaitForChild( "Title" ).Text = Keys[ a ][ b ]
+				New.Title.Text = Keys[ a ][ b ]
 				
 				New.Visible = true
 				
