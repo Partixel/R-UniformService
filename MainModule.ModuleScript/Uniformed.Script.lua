@@ -266,20 +266,20 @@ function GetUni.OnServerInvoke( Plr )
 	local Data = DataStore:GetAsync( Plr.UserId ) or { }
 	
 	local Sel, TSel
-	
-	if Data[ 1 ] and Unis[ Data[ 1 ][ 1 ] ] and Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] then
+		
+	if Data[ 1 ] == false or ( Data[ 1 ] and Unis[ Data[ 1 ][ 1 ] ] and Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] ) then
 		
 		Sel = Data[ 1 ]
 		
-		Shirt = Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] or { }
+		Shirt = Data[ 1 ] and Unis[ Data[ 1 ][ 1 ] ][ Data[ 1 ][ 2 ] ] or { }
 		
 	end
 	
-	if Data[ 2 ] and Unis[ Data[ 2 ][ 1 ] ] and Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] then
+	if Data[ 2 ] == false or ( Data[ 2 ] and Unis[ Data[ 2 ][ 1 ] ] and Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] ) then
 		
 		TSel = Data[ 2 ]
 		
-		Shirt = Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] or { }
+		Shirt = Data[ 2 ] and Unis[ Data[ 2 ][ 1 ] ][ Data[ 2 ][ 2 ] ] or { }
 		
 	end
 	
