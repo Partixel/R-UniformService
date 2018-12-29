@@ -10,7 +10,7 @@ ThemeUtil.BindUpdate( script.Parent.Frame.Search, "PlaceholderColor3", { "Second
 
 ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, "ScrollBarImageColor3", "SecondaryBackground" )
 
-local Players = game:GetService( "Players" )
+local Players, TweenService = game:GetService( "Players" ), game:GetService( "TweenService" )
 
 local Plr = Players.LocalPlayer
 
@@ -99,21 +99,41 @@ function GetNormTShirt( )
 	
 end
 
-function PopulateScroll( )
+ScrFr.UIListLayout:GetPropertyChangedSignal( "AbsoluteContentSize" ):Connect( function ( )
 	
-	local Buttons = ScrFr:GetChildren( )
+	ScrFr.CanvasSize = UDim2.new( 0, 0, 0, ScrFr.UIListLayout.AbsoluteContentSize.Y )
 	
-	for a = 1, #Buttons do
+end )
+
+function GetButtonFromPath( Path, TShirt )
+	
+	if Path == nil then
 		
-		if Buttons[ a ]:IsA( "TextButton" ) then
+		if TShirt then
 			
-			Buttons[ a ]:Destroy( )
+			Path = DefaultTShirt or false
+			
+		else
+			
+			Path = DefaultUni or false
 			
 		end
 		
 	end
 	
-	local SelectedName, SelectedTShirtName = Selected and ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) or Selected == nil and ( DefaultUni and DefaultUni[ 1 ] .. ": " .. DefaultUni[ 2 ] ) or "false", SelectedTShirt and ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) or SelectedTShirt == nil and ( DefaultTShirt and DefaultTShirt[ 1 ] .. ": " .. DefaultTShirt[ 2 ] ) or "false"
+	return Path == false and ScrFr:FindFirstChild( "false" ) or ScrFr:FindFirstChild( Path[ 1 ] ) and ScrFr:FindFirstChild( Path[ 1 ] ):FindFirstChild( Path[ 2 ] )
+	
+end
+
+function Redraw( )
+	
+	local Old = ScrFr:GetChildren( )
+	
+	for a = 1, #Old do
+		
+		if Old[ a ]:IsA( "Frame" ) or Old[ a ]:IsA( "TextButton" ) then Old[ a ]:Destroy( ) end
+		
+	end
 	
 	local Keys = GetMatchingKeys( Unis, Search.Text:lower( ) )
 	
@@ -127,27 +147,21 @@ function PopulateScroll( )
 	
 	New.Name = "false"
 	
-	New.LayoutOrder = 1
+	New.LayoutOrder = 0
 	
-	if Selected == false and SelectedTShirt == false then
-		
-		New.BackgroundTransparency = 0
+	if ( Selected == false and SelectedTShirt == false ) or ( Selected == nil and DefaultUni == nil and SelectedTShirt == nil and DefaultTShirt == nil ) then
 		
 		New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
 		
 		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
 		
-		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
+		New.UIPadding.PaddingTop = UDim.new( 0, 5 )
 		
-	elseif Selected == nil and DefaultUni == nil and SelectedTShirt == nil and DefaultTShirt == nil then
+		New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 		
-		New.BackgroundTransparency = 0
+		New.Size = UDim2.new( 1, 0, 0, 50 )
 		
-		New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
-		
-		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
-		
-		ThemeUtil.BindUpdate( New, "BackgroundColor3", { "PositiveColor", "InvertedBackground" } )
+		ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
 		
 	end
 	
@@ -160,6 +174,36 @@ function PopulateScroll( )
 	New.Visible = true
 	
 	New.MouseButton1Click:Connect( function ( )
+		
+		local UniButton, TShirtButton = GetButtonFromPath( Selected ), GetButtonFromPath( SelectedTShirt )
+		
+		if UniButton then
+			
+			UniButton.UIPadding.PaddingLeft = UDim.new( 0, 0 )
+			
+			UniButton.UIPadding.PaddingRight = UDim.new( 0, 0 )
+			
+			UniButton.UIPadding.PaddingTop = UDim.new( 0, 0 )
+			
+			UniButton.UIPadding.PaddingBottom = UDim.new( 0, 0 )
+			
+			UniButton.Size = UDim2.new( 1, 0, 0, 40 )
+			
+		end
+		
+		if TShirtButton then
+			
+			TShirtButton.UIPadding.PaddingLeft = UDim.new( 0, 0 )
+			
+			TShirtButton.UIPadding.PaddingRight = UDim.new( 0, 0 )
+			
+			TShirtButton.UIPadding.PaddingTop = UDim.new( 0, 0 )
+			
+			TShirtButton.UIPadding.PaddingBottom = UDim.new( 0, 0 )
+			
+			TShirtButton.Size = UDim2.new( 1, 0, 0, 40 )
+			
+		end
 		
 		local Sel = { }
 		
@@ -191,193 +235,307 @@ function PopulateScroll( )
 			
 		end
 		
-		ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
+		New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
 		
-		PopulateScroll( )
+		New.UIPadding.PaddingRight = UDim.new( 0, 5 )
+		
+		New.UIPadding.PaddingTop = UDim.new( 0, 5 )
+		
+		New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
+		
+		New.Size = UDim2.new( 1, 0, 0, 50 )
+		
+		ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+		
+		ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
 		
 	end )
 	
 	New.Parent = ScrFr
 	
-	local Cur = 1
-	
 	for a = 1, #Keys do
-		
-		Cur = Cur + 1
 		
 		local Cat = Gui.Category:Clone( )
 		
-		ThemeUtil.BindUpdate( { Cat, Cat.Bar, Cat.OpenIndicator, Cat.TitleText }, "BackgroundColor3", "SecondaryBackground" )
+		ThemeUtil.BindUpdate( { Cat[ "-1" ].Bar, Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, "BackgroundColor3", "SecondaryBackground" )
 		
-		ThemeUtil.BindUpdate( { Cat, Cat.OpenIndicator, Cat.TitleText }, "TextColor3", "TextColor" )
+		ThemeUtil.BindUpdate( { Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, "TextColor3", "TextColor" )
+		
+		Cat.Name = Keys[ a ].Name
 		
 		Cat.Visible = true
 		
-		Cat.LayoutOrder = Cur
+		Cat.LayoutOrder = a
 		
-		Cat.OpenIndicator.Text = not Hide[ Keys[ a ].Name ] and  "Λ" or "V"
+		Cat[ "-1" ].OpenIndicator.Text = not Hide[ Keys[ a ].Name ] and  "Λ" or "V"
 		
-		Cat.TitleText.Text = Keys[ a ].Name
+		Cat[ "-1" ].TitleText.Text = Keys[ a ].Name
 		
-		Cat.MouseButton1Click:Connect( function ( )
+		Cat[ "-1" ].MouseButton1Click:Connect( function ( )
 			
 			Hide[ Keys[ a ].Name ] = not Hide[ Keys[ a ].Name ]
 			
-			PopulateScroll( )
+			TweenService:Create( Cat, TweenInfo.new( 0.5, Enum.EasingStyle.Sine ), { Size = UDim2.new( 1, 0, 0, Hide[ Keys[ a ].Name ] and Cat[ "-1" ].Size.Y.Offset or Cat.UIListLayout.AbsoluteContentSize.Y ) } ):Play( )
+			
+			Cat[ "-1" ].OpenIndicator.Text = not Hide[ Keys[ a ].Name ] and  "Λ" or "V"
 			
 		end )
 		
-		Cat.Parent = ScrFr
-		
-		if not Hide[ Keys[ a ].Name ] then
+		for b = 1, #Keys[ a ] do
 			
-			for b = 1, #Keys[ a ] do
+			local Uni = Unis[ Keys[ a ].Name ][ Keys[ a ][ b ] ] or { }
+			
+			local Shirt, TShirt = Uni[ 1 ] ~= nil, Uni[ 3 ] ~= nil
+			
+			local New = Base:Clone( )
+			
+			ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+			
+			ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
+			
+			ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+			
+			New.Name = Keys[ a ][ b ]
+			
+			local Path = Keys[ a ].Name .. ": " .. Keys[ a ][ b ]
+			
+			if ( Selected and ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) or Selected == nil and ( DefaultUni and DefaultUni[ 1 ] .. ": " .. DefaultUni[ 2 ] ) or "false" ) == Path or ( SelectedTShirt and ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) or SelectedTShirt == nil and ( DefaultTShirt and DefaultTShirt[ 1 ] .. ": " .. DefaultTShirt[ 2 ] ) or "false" ) == Path then
 				
-				Cur = Cur + 1
+				New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
 				
-				local Uni = Unis[ Keys[ a ].Name ][ Keys[ a ][ b ] ] or { }
+				New.UIPadding.PaddingRight = UDim.new( 0, 5 )
 				
-				local Shirt, TShirt = Uni[ 1 ] ~= nil, Uni[ 3 ] ~= nil
+				New.UIPadding.PaddingTop = UDim.new( 0, 5 )
 				
-				local New = Base:Clone( )
+				New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 				
-				ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
+				New.Size = UDim2.new( 1, 0, 0, 50 )
 				
-				ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
+			end
+			
+			ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( ( Shirt and Selected == nil ) or ( TShirt and SelectedTShirt == nil ) ) and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+			
+			if Shirt then
 				
-				ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+				New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
 				
-				New.Name = Keys[ a ].Name .. ": " .. Keys[ a ][ b ]
+			end
+			
+			if TShirt then
 				
-				New.LayoutOrder = Cur
+				New.BorderColor3 = Color3.fromRGB( 100, 200, 100 )
 				
-				if SelectedName == New.Name or SelectedTShirtName == New.Name then
-					
-					New.BackgroundTransparency = 0
-					
-					New.UIPadding.PaddingLeft = UDim.new( 0, 5 )
-					
-					New.UIPadding.PaddingRight = UDim.new( 0, 5 )
-					
-				end
+				New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. Uni[ 3 ]
 				
-				if ( Shirt and Selected == nil ) or ( TShirt and SelectedTShirt == nil ) then
-					
-					ThemeUtil.BindUpdate( New, "BackgroundColor3", { "PositiveColor", "InvertedBackground" } )
-					
-				else
-					
-					ThemeUtil.BindUpdate( New, "BackgroundColor3", { "SelectionColor", "InvertedBackground" } )
-					
-				end
+				New.ImageLabel.ImageRectOffset = Vector2.new( 0, 0 )
+				
+				New.ImageLabel.ImageRectSize = Vector2.new( 0, 0 )
+				
+			end
+			
+			New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
+			
+			New.Title.Text = Keys[ a ][ b ]
+			
+			New.Visible = true
+			
+			New.MouseButton1Click:Connect( function ( )
 				
 				if Shirt then
 					
-					New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
+					local Button = GetButtonFromPath( Selected )
+					
+					if Button then
+						
+						Button.UIPadding.PaddingLeft = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingRight = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingTop = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingBottom = UDim.new( 0, 0 )
+						
+						Button.Size = UDim2.new( 1, 0, 0, 40 )
+						
+					end
+					
+					Selected = ( ( Selected and ( Selected[ 1 ] .. ": " .. Selected[ 2 ] ) or Selected == nil and ( DefaultUni and DefaultUni[ 1 ] .. ": " .. DefaultUni[ 2 ] ) or "false" ) ~= Path or Selected == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
+					
+					Button = GetButtonFromPath( Selected )
+					
+					if Button then
+						
+						if Button.Name == "false" then
+							
+							if ( Selected == false and SelectedTShirt == false ) or ( Selected == nil and DefaultUni == nil and SelectedTShirt == nil and DefaultTShirt == nil ) then
+								
+								Button.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingRight = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingTop = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
+								
+								Button.Size = UDim2.new( 1, 0, 0, 50 )
+								
+								ThemeUtil.BindUpdate( Button, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+								
+							end
+							
+						else
+							
+							Button.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingRight = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingTop = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
+							
+							Button.Size = UDim2.new( 1, 0, 0, 50 )
+							
+							ThemeUtil.BindUpdate( Button, "BackgroundColor3", { Selected == nil and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+							
+						end
+						
+					end
+					
+				elseif SelectedTShirt == false then
+					
+					SelectedTShirt = nil
 					
 				end
 				
 				if TShirt then
 					
-					New.BorderColor3 = Color3.fromRGB( 100, 200, 100 )
+					local Button = GetButtonFromPath( Selected, true )
 					
-					New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. Uni[ 3 ]
+					if Button then
+						
+						Button.UIPadding.PaddingLeft = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingRight = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingTop = UDim.new( 0, 0 )
+						
+						Button.UIPadding.PaddingBottom = UDim.new( 0, 0 )
+						
+						Button.Size = UDim2.new( 1, 0, 0, 40 )
+						
+					end
 					
-					New.ImageLabel.ImageRectOffset = Vector2.new( 0, 0 )
+					SelectedTShirt = ( ( SelectedTShirt and ( SelectedTShirt[ 1 ] .. ": " .. SelectedTShirt[ 2 ] ) or SelectedTShirt == nil and ( DefaultTShirt and DefaultTShirt[ 1 ] .. ": " .. DefaultTShirt[ 2 ] ) or "false" ) ~= Path or SelectedTShirt == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
 					
-					New.ImageLabel.ImageRectSize = Vector2.new( 0, 0 )
+					Button = GetButtonFromPath( Selected, true )
+					
+					if Button then
+						
+						if Button.Name == "false" then
+							
+							if not Shirt and ( ( Selected == false and SelectedTShirt == false ) or ( Selected == nil and DefaultUni == nil and SelectedTShirt == nil and DefaultTShirt == nil ) ) then
+								
+								Button.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingRight = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingTop = UDim.new( 0, 5 )
+								
+								Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
+								
+								Button.Size = UDim2.new( 1, 0, 0, 50 )
+								
+								ThemeUtil.BindUpdate( Button, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+								
+							end
+							
+						else
+							
+							Button.UIPadding.PaddingLeft = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingRight = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingTop = UDim.new( 0, 5 )
+							
+							Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
+							
+							Button.Size = UDim2.new( 1, 0, 0, 50 )
+							
+							ThemeUtil.BindUpdate( Button, "BackgroundColor3", { SelectedTShirt == nil and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+							
+						end
+						
+					end
+					
+				elseif SelectedTShirt == false then
+					
+					SelectedTShirt = nil
 					
 				end
 				
-				New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
+				local Sel = { }
 				
-				New.Title.Text = Keys[ a ][ b ]
+				if Selected then
+					
+					Sel[ 1 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 1 ]
+					
+					Sel[ 2 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 2 ]
+					
+				elseif DefaultUni then
+					
+					Hide[ DefaultUni[ 1 ] ] = nil
+					
+					Sel[ 1 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 1 ]
+					
+					Sel[ 2 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 2 ]
+					
+				end
 				
-				New.Visible = true
+				if SelectedTShirt then
+					
+					Sel[ 3 ] = Unis[ SelectedTShirt[ 1 ] ][ SelectedTShirt[ 2 ] ][ 3 ]
+					
+				elseif DefaultTShirt then
+					
+					Hide[ DefaultTShirt[ 1 ] ] = nil
+					
+					Sel[ 3 ] = Unis[ DefaultTShirt[ 1 ] ][ DefaultTShirt[ 2 ] ][ 3 ]
+					
+				end
 				
-				New.MouseButton1Click:Connect( function ( )
-					
-					if Shirt then
-						
-						Selected = ( SelectedName ~= New.Name or Selected == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
-						
-					elseif SelectedTShirt == false then
-						
-						SelectedTShirt = nil
-						
-					end
-					
-					if TShirt then
-						
-						SelectedTShirt = ( SelectedTShirtName ~= New.Name or SelectedTShirt == nil ) and { Keys[ a ].Name, Keys[ a ][ b ] } or nil
-						
-					elseif SelectedTShirt == false then
-						
-						SelectedTShirt = nil
-						
-					end
-					
-					local Sel = { }
-					
-					if Selected then
-						
-						Sel[ 1 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 1 ]
-						
-						Sel[ 2 ] = Unis[ Selected[ 1 ] ][ Selected[ 2 ] ][ 2 ]
-						
-					elseif DefaultUni then
-						
-						Hide[ DefaultUni[ 1 ] ] = nil
-						
-						Sel[ 1 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 1 ]
-						
-						Sel[ 2 ] = Unis[ DefaultUni[ 1 ] ][ DefaultUni[ 2 ] ][ 2 ]
-						
-					end
-					
-					if SelectedTShirt then
-						
-						Sel[ 3 ] = Unis[ SelectedTShirt[ 1 ] ][ SelectedTShirt[ 2 ] ][ 3 ]
-						
-					elseif DefaultTShirt then
-						
-						Hide[ DefaultTShirt[ 1 ] ] = nil
-						
-						Sel[ 3 ] = Unis[ DefaultTShirt[ 1 ] ][ DefaultTShirt[ 2 ] ][ 3 ]
-						
-					end
-					
-					ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
-					
-					PopulateScroll( )
-					
-				end )
+				ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
 				
-				New.Parent = ScrFr
-				
-			end
+			end )
+			
+			New.Parent = Cat
 			
 		end
 		
+		Cat.Size = UDim2.new( 1, 0, 0, Hide[ Keys[ a ].Name ] and Cat[ "-1" ].Size.Y.Offset or Cat.UIListLayout.AbsoluteContentSize.Y )
+		
+		Cat.UIListLayout:GetPropertyChangedSignal( "AbsoluteContentSize" ):Connect( function ( )
+			
+			Cat.Size = UDim2.new( 1, 0, 0, Hide[ Keys[ a ].Name ] and Cat[ "-1" ].Size.Y.Offset or Cat.UIListLayout.AbsoluteContentSize.Y )
+			
+		end )
+		
+		Cat.Parent = ScrFr
+		
 	end
 	
-	ScrFr.CanvasSize = UDim2.new( 0, 0, 0, ScrFr.UIListLayout.AbsoluteContentSize.Y )
-	
 end
-
-local Visible
 
 Gui.Position = UDim2.new( 1, 0, 0.2, 0 )
 
 Gui.Search.Changed:Connect( function ( Prop )
 	
-	if Prop == "Text" then PopulateScroll( ) end
+	if Prop == "Text" then Redraw( ) end
 	
 end )
 
-local Populated
-
 if Gui:FindFirstChild( "InOut" ) then
+	
+	local Populated, Visible
 	
 	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, "BackgroundColor3", "Background" )
 	
@@ -395,24 +553,16 @@ if Gui:FindFirstChild( "InOut" ) then
 
 			Populated = true
 
-			PopulateScroll( )
+			Redraw( )
 
 		end
-
-		Gui:TweenPosition( Visible and UDim2.new( 0.8, 0, 0.2, 0 ) or UDim2.new( 1, 0, 0.2, 0 ), nil, nil, .5, true )
+		
+		TweenService:Create( Gui, TweenInfo.new( 0.5 ), { Position = Visible and UDim2.new( 0.8, 0, 0.2, 0 ) or UDim2.new( 1, 0, 0.2, 0 ) } ):Play( )
 
 	end )
 	
 else
 	
-	Visible = true
-	
-	if not Populated then
-		
-		Populated = true
-		
-		PopulateScroll( )
-		
-	end
+	Redraw( )
 	
 end
