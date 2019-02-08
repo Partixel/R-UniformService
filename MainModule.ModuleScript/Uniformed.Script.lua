@@ -152,7 +152,7 @@ end
 
 Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil Normal[ Plr ] = nil Loaded[ Plr ] = nil end )
 
-local Debug = false
+local Debug = true and game.PlaceId == 1146989110
 
 function GetUni.OnServerInvoke( Plr )
 	
