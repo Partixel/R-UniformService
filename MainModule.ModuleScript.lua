@@ -60,27 +60,11 @@ return {
 		
 	},
 	
-	[ 4187067 ] = {
+	[ 4621565 ] = {
 		
-		Name = "The Robloxian Army Ultramarines",
+		Name = "The Robloxian Army Valkyrie Unit",
 		
-		[ 25 ] = { { 2184462266, 2184463517 } }
-		
-	},
-	
-	[ 4187069 ] = {
-		
-		Name = "The Robloxian Army Raven Guard",
-		
-		[ 2 ] = { { 2197618690, 2197620842 } }
-		
-	},
-	
-	[ 4187068 ] = {
-		
-		Name = "The Robloxian Army Blood Angels",
-		
-		[ 14 ] = { { 2184508023, 2184508023 } }
+		[ 2 ] = { { 2818975075, 2693327473 } }
 		
 	},
 	

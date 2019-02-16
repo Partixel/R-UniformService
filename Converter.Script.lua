@@ -21,6 +21,9 @@ local toolbar = plugin:CreateToolbar( "ImageIdConverter" )
 local GS = game:GetService( "GroupService" )
 
 local button = toolbar:CreateButton( "Convert", "Press me", "" )
+
+button.ClickableWhenViewportHidden = true
+
 button.Click:Connect(function()
 	
 	local s = game:GetService( "ServerStorage" ).Uniformed.MainModule.Source
