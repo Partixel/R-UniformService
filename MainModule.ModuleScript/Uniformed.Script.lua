@@ -2,13 +2,9 @@ local GS = game:GetService( "GroupService" )
 
 local Groups = require( game:GetService( "ServerStorage" ):WaitForChild( "UniDatabase" ) )
 
-local Ran, DataStore = pcall( game:GetService( "DataStoreService" ).GetDataStore, game:GetService( "DataStoreService" ), "Uniformed" )
+local DataStore2 = require(1936396537)
 
-if not Ran or type( DataStore ) ~= "userdata" or not pcall( function ( ) DataStore:GetAsync( "Test" ) end ) then
-	
-	DataStore = { GetAsync = function ( ) end, SetAsync = function ( ) end, UpdateAsync = function ( ) end, OnUpdate = function ( ) end }
-	
-end
+DataStore2.Combine("PartixelsVeryCoolMasterKey", "Uniformed1")
 
 local Players = game:GetService( "Players" )
 
@@ -263,7 +259,7 @@ function GetUni.OnServerInvoke( Plr )
 	
 	Normal[ Plr ] = { Shirt[ 1 ], Shirt[ 2 ], TShirt[ 3 ] }
 	
-	local Data = DataStore:GetAsync( Plr.UserId ) or { }
+	local Data = DataStore2( "Uniformed1", Plr ):Get( { } )
 	
 	local Sel, TSel
 		
@@ -303,7 +299,7 @@ ChangeUni.OnServerEvent:Connect( function ( Plr, Shirt, TShirt, Ids )
 	
 	Update( Plr, Plr.Character )
 	
-	pcall( function ( ) DataStore:SetAsync( Plr.UserId, { Shirt, TShirt } ) end )
+	DataStore2( "Uniformed1", Plr ):Set( { Shirt, TShirt } )
 	
 end )
 
