@@ -1,14 +1,10 @@
 local ThemeUtil = require( game:GetService( "ReplicatedStorage" ):WaitForChild( "ThemeUtil" ) )
 
-ThemeUtil.BindUpdate( script.Parent.Frame, "BackgroundColor3", "Background" )
+ThemeUtil.BindUpdate( script.Parent.Frame, { BackgroundColor3 = "Primary_BackgroundColor", BackgroundTransparency = "Primary_BackgroundTransparency" } )
 
-ThemeUtil.BindUpdate( script.Parent.Frame.Search, { "BackgroundColor3", "BorderColor3" }, { "SecondaryBackground", "InvertedBackground" } )
+ThemeUtil.BindUpdate( script.Parent.Frame.Search, { [ { "BackgroundColor3", "BorderColor3" } ] = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency", TextColor3 = "Primary_TextColor", TextTransparency = "Primary_TextTransparency", PlaceholderColor3 = "Secondary_TextColor" } )
 
-ThemeUtil.BindUpdate( script.Parent.Frame.Search, "TextColor3", { "TextColor", "InvertedBackground" } )
-
-ThemeUtil.BindUpdate( script.Parent.Frame.Search, "PlaceholderColor3", { "SecondaryTextColor", "InvertedTextColor" } )
-
-ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, "ScrollBarImageColor3", "SecondaryBackground" )
+ThemeUtil.BindUpdate( script.Parent.Frame.ScrollingFrame, { ScrollBarImageColor3 = "Secondary_BackgroundColor", ScrollBarImageTransparency = "Secondary_BackgroundTransparency" } )
 
 local Players, TweenService = game:GetService( "Players" ), game:GetService( "TweenService" )
 
@@ -170,11 +166,7 @@ function Redraw( )
 	
 	local New = Base:Clone( )
 	
-	ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
-	
-	ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
-	
-	ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+	ThemeUtil.BindUpdate( New.Title, { TextColor3 = "Primary_TextColor", BorderColor3 = "Secondary_BackgroundColor", BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 	
 	New.Name = "false"
 	
@@ -190,9 +182,17 @@ function Redraw( )
 		
 		New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 		
+		New.TopSel.Visible = true
+		
+		New.BottomSel.Visible = true
+		
+		New.LeftSel.Visible = true
+		
+		New.RightSel.Visible = true
+		
 		New.Size = UDim2.new( 1, 0, 0, 50 )
 		
-		ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+		ThemeUtil.BindUpdate( { New.TopSel, New.BottomSel, New.LeftSel, New.RightSel }, { BackgroundColor3 = ( Selected == false and SelectedTShirt == false ) and "Selection_Color3" or "Positive_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 		
 	end
 	
@@ -218,6 +218,14 @@ function Redraw( )
 			
 			UniButton.UIPadding.PaddingBottom = UDim.new( 0, 0 )
 			
+			UniButton.TopSel.Visible = false
+			
+			UniButton.BottomSel.Visible = false
+			
+			UniButton.LeftSel.Visible = false
+			
+			UniButton.RightSel.Visible = false
+			
 			UniButton.Size = UDim2.new( 1, 0, 0, 40 )
 			
 		end
@@ -231,6 +239,14 @@ function Redraw( )
 			TShirtButton.UIPadding.PaddingTop = UDim.new( 0, 0 )
 			
 			TShirtButton.UIPadding.PaddingBottom = UDim.new( 0, 0 )
+			
+			TShirtButton.TopSel.Visible = false
+			
+			TShirtButton.BottomSel.Visible = false
+			
+			TShirtButton.LeftSel.Visible = false
+			
+			TShirtButton.RightSel.Visible = false
 			
 			TShirtButton.Size = UDim2.new( 1, 0, 0, 40 )
 			
@@ -274,9 +290,17 @@ function Redraw( )
 		
 		New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 		
+		New.TopSel.Visible = true
+		
+		New.BottomSel.Visible = true
+		
+		New.LeftSel.Visible = true
+		
+		New.RightSel.Visible = true
+		
 		New.Size = UDim2.new( 1, 0, 0, 50 )
 		
-		ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+		ThemeUtil.BindUpdate( { New.TopSel, New.BottomSel, New.LeftSel, New.RightSel }, { BackgroundColor3 = ( Selected == false and SelectedTShirt == false ) and "Selection_Color3" or "Positive_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 		
 		ChangeUni:FireServer( Selected, SelectedTShirt, Sel )
 		
@@ -288,9 +312,9 @@ function Redraw( )
 		
 		local Cat = Gui.Category:Clone( )
 		
-		ThemeUtil.BindUpdate( { Cat[ "-1" ].Bar, Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, "BackgroundColor3", "SecondaryBackground" )
+		ThemeUtil.BindUpdate( { Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency", TextColor3 = "Primary_TextColor", TextTransparency = "Primary_TextTransparency" } )
 		
-		ThemeUtil.BindUpdate( { Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, "TextColor3", "TextColor" )
+		ThemeUtil.BindUpdate( { Cat[ "-1" ].BarL, Cat[ "-1" ].BarR, Cat[ "-1" ].BarR2 }, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 		
 		Cat.Name = Keys[ a ].Name
 		
@@ -320,11 +344,7 @@ function Redraw( )
 			
 			local New = Base:Clone( )
 			
-			ThemeUtil.BindUpdate( New.Title, "TextColor3", { "TextColor", "InvertedBackground" } )
-			
-			ThemeUtil.BindUpdate( { New.Title, New.Bkg }, "BackgroundColor3", "SecondaryBackground" )
-			
-			ThemeUtil.BindUpdate( New.Title, "BorderColor3", "SecondaryBackground" )
+			ThemeUtil.BindUpdate( New.Title, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency", TextColor3 = "Primary_TextColor", TextTransparency = "Primary_TextTransparency", BorderColor3 = "Secondary_BackgroundColor" } )
 			
 			New.Name = Keys[ a ][ b ]
 			
@@ -340,11 +360,19 @@ function Redraw( )
 				
 				New.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 				
+				New.TopSel.Visible = true
+				
+				New.BottomSel.Visible = true
+				
+				New.LeftSel.Visible = true
+				
+				New.RightSel.Visible = true
+				
 				New.Size = UDim2.new( 1, 0, 0, 50 )
 				
 			end
 			
-			ThemeUtil.BindUpdate( New, "BackgroundColor3", { ( ( Shirt and Selected == nil ) or ( TShirt and SelectedTShirt == nil ) ) and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+			ThemeUtil.BindUpdate( { New.TopSel, New.BottomSel, New.LeftSel, New.RightSel }, { BackgroundColor3 = ( ( Shirt and Selected == nil ) or ( TShirt and SelectedTShirt == nil ) ) and "Positive_Color3" or "Selection_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 			
 			if Shirt then
 				
@@ -386,6 +414,14 @@ function Redraw( )
 						
 						Button.UIPadding.PaddingBottom = UDim.new( 0, 0 )
 						
+						Button.TopSel.Visible = false
+						
+						Button.BottomSel.Visible = false
+						
+						Button.LeftSel.Visible = false
+						
+						Button.RightSel.Visible = false
+						
 						Button.Size = UDim2.new( 1, 0, 0, 40 )
 						
 					end
@@ -408,9 +444,17 @@ function Redraw( )
 								
 								Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 								
+								Button.TopSel.Visible = true
+								
+								Button.BottomSel.Visible = true
+								
+								Button.LeftSel.Visible = true
+								
+								Button.RightSel.Visible = true
+								
 								Button.Size = UDim2.new( 1, 0, 0, 50 )
 								
-								ThemeUtil.BindUpdate( Button, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+								ThemeUtil.BindUpdate( { Button.TopSel, Button.BottomSel, Button.LeftSel, Button.RightSel }, { BackgroundColor3 = ( Selected == false and SelectedTShirt == false ) and "Selection_Color3" or "Positive_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 								
 							end
 							
@@ -424,9 +468,17 @@ function Redraw( )
 							
 							Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 							
+							Button.TopSel.Visible = true
+							
+							Button.BottomSel.Visible = true
+							
+							Button.LeftSel.Visible = true
+							
+							Button.RightSel.Visible = true
+							
 							Button.Size = UDim2.new( 1, 0, 0, 50 )
 							
-							ThemeUtil.BindUpdate( Button, "BackgroundColor3", { Selected == nil and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+							ThemeUtil.BindUpdate( { Button.TopSel, Button.BottomSel, Button.LeftSel, Button.RightSel }, { BackgroundColor3 = Selected == nil and "Positive_Color3" or "Selection_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 							
 						end
 						
@@ -452,6 +504,14 @@ function Redraw( )
 						
 						Button.UIPadding.PaddingBottom = UDim.new( 0, 0 )
 						
+						Button.TopSel.Visible = false
+						
+						Button.BottomSel.Visible = false
+						
+						Button.LeftSel.Visible = false
+						
+						Button.RightSel.Visible = false
+						
 						Button.Size = UDim2.new( 1, 0, 0, 40 )
 						
 					end
@@ -474,9 +534,17 @@ function Redraw( )
 								
 								Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 								
+								Button.TopSel.Visible = true
+								
+								Button.BottomSel.Visible = true
+								
+								Button.LeftSel.Visible = true
+								
+								Button.RightSel.Visible = true
+								
 								Button.Size = UDim2.new( 1, 0, 0, 50 )
 								
-								ThemeUtil.BindUpdate( Button, "BackgroundColor3", { ( Selected == false and SelectedTShirt == false ) and "SelectionColor" or "PositiveColor", "InvertedBackground" } )
+								ThemeUtil.BindUpdate( { Button.TopSel, Button.BottomSel, Button.LeftSel, Button.RightSel }, { BackgroundColor3 = ( Selected == false and SelectedTShirt == false ) and "Selection_Color3" or "Positive_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 								
 							end
 							
@@ -490,9 +558,17 @@ function Redraw( )
 							
 							Button.UIPadding.PaddingBottom = UDim.new( 0, 5 )
 							
+							Button.TopSel.Visible = true
+							
+							Button.BottomSel.Visible = true
+							
+							Button.LeftSel.Visible = true
+							
+							Button.RightSel.Visible = true
+							
 							Button.Size = UDim2.new( 1, 0, 0, 50 )
 							
-							ThemeUtil.BindUpdate( Button, "BackgroundColor3", { SelectedTShirt == nil and "PositiveColor" or "SelectionColor", "InvertedBackground" } )
+							ThemeUtil.BindUpdate( { Button.TopSel, Button.BottomSel, Button.LeftSel, Button.RightSel }, { BackgroundColor3 = SelectedTShirt == nil and "Positive_Color3" or "Selection_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 							
 						end
 						
@@ -568,17 +644,39 @@ if Gui:FindFirstChild( "InOut" ) then
 	
 	local Populated, Visible
 	
-	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, "BackgroundColor3", "Background" )
+	function UpdateColor( )
+		
+		script.Parent.Frame.InOut.BackgroundColor3 = Visible and ThemeUtil.GetThemeFor( "Positive_Color3" ) or ThemeUtil.GetThemeFor( "Primary_BackgroundColor" )
+		
+		local Transparency = ThemeUtil.GetThemeFor( "Primary_BackgroundTransparency" )
+		
+		script.Parent.Frame.InOut.BackgroundTransparency = Transparency
+		
+		if Transparency > 0.9 then
+			
+			script.Parent.Frame.InOut.TextStrokeColor3 = ThemeUtil.GetThemeFor( "Primary_TextColor" )
+			
+			script.Parent.Frame.InOut.TextColor3 = Visible and ThemeUtil.GetThemeFor( "Positive_Color3" ) or ThemeUtil.GetThemeFor( "Primary_BackgroundColor" )
+			
+			script.Parent.Frame.InOut.TextStrokeTransparency = 0
+			
+		else
+			
+			script.Parent.Frame.InOut.TextColor3 = ThemeUtil.GetThemeFor( "Primary_TextColor" )
+			
+			script.Parent.Frame.InOut.TextStrokeTransparency = 1
+			
+		end
+		
+	end
 	
-	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, "TextColor3", { "TextColor", "InvertedBackground" } )
-	
-	Gui.InOut.Text = "<"
+	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { BackgroundColor3 = UpdateColor, TextTransparency = "Primary_TextTransparency" } )
 
 	Gui.InOut.MouseButton1Click:Connect( function ( )
 
 		Visible = not Visible
-
-		Gui.InOut.Text = Visible and ">" or "<"
+		
+		UpdateColor( )
 
 		if not Populated then
 
