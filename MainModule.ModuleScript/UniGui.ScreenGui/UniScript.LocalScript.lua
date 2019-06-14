@@ -125,6 +125,37 @@ function GetButtonFromPath( Path, TShirt )
 	
 end
 
+local EscapePatterns = {
+	
+	[ "(" ] = "%(",
+		
+	[ ")" ] = "%)",
+	
+	[ "." ] = "%.",
+	
+	[ "%" ] = "%%",
+	
+	[ "+" ] = "%+",
+	
+	[ "-" ] = "%-",
+	
+	[ "*" ] = "%*",
+	
+	[ "?" ] = "%?",
+	
+	[ "[" ] = "%[",
+	
+	[ "]" ] = "%]",
+	
+	[ "^" ] = "%^",
+	
+	[ "$" ] = "%$",
+	
+	[ "\0" ] = "%z"
+	
+	
+}
+
 function Redraw( )
 	
 	local Old = ScrFr:GetChildren( )
@@ -135,7 +166,7 @@ function Redraw( )
 		
 	end
 	
-	local Keys = GetMatchingKeys( Unis, Search.Text:lower( ) )
+	local Keys = GetMatchingKeys( Unis, Search.Text:lower( ):gsub( ".", EscapePatterns ) )
 	
 	local New = Base:Clone( )
 	
