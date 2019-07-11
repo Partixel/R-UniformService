@@ -644,39 +644,35 @@ if Gui:FindFirstChild( "InOut" ) then
 	
 	local Populated, Visible
 	
-	function UpdateColor( )
-		
-		script.Parent.Frame.InOut.BackgroundColor3 = Visible and ThemeUtil.GetThemeFor( "Positive_Color3" ) or ThemeUtil.GetThemeFor( "Primary_BackgroundColor" )
+	local function HandleTransparency( Obj )
 		
 		local Transparency = ThemeUtil.GetThemeFor( "Primary_BackgroundTransparency" )
 		
-		script.Parent.Frame.InOut.BackgroundTransparency = Transparency
+		Obj.BackgroundTransparency = Transparency
 		
 		if Transparency > 0.9 then
 			
-			script.Parent.Frame.InOut.TextStrokeColor3 = ThemeUtil.GetThemeFor( "Primary_TextColor" )
+			ThemeUtil.BindUpdate( Obj, { TextColor3 = Visible and "Selection_Color3" or "Primary_BackgroundColor" } )
 			
-			script.Parent.Frame.InOut.TextColor3 = Visible and ThemeUtil.GetThemeFor( "Positive_Color3" ) or ThemeUtil.GetThemeFor( "Primary_BackgroundColor" )
-			
-			script.Parent.Frame.InOut.TextStrokeTransparency = 0
+			Obj.TextStrokeTransparency = 0
 			
 		else
 			
-			script.Parent.Frame.InOut.TextColor3 = ThemeUtil.GetThemeFor( "Primary_TextColor" )
+			ThemeUtil.BindUpdate( Obj, { TextColor3 = "Primary_TextColor" } )
 			
-			script.Parent.Frame.InOut.TextStrokeTransparency = 1
+			Obj.TextStrokeTransparency = 1
 			
 		end
 		
 	end
 	
-	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { BackgroundColor3 = UpdateColor, TextTransparency = "Primary_TextTransparency" } )
+	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { TextTransparency = "Primary_TextTransparency", TextStrokeColor3 = "Primary_TextColor", BackgroundTransparency = HandleTransparency, BackgroundColor3 = Visible and "Selection_Color3" or "Primary_BackgroundColor" } )
 
 	Gui.InOut.MouseButton1Click:Connect( function ( )
 
 		Visible = not Visible
 		
-		UpdateColor( )
+		ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { BackgroundColor3 = Visible and "Selection_Color3" or "Primary_BackgroundColor" } )
 
 		if not Populated then
 
