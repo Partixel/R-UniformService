@@ -644,9 +644,7 @@ if Gui:FindFirstChild( "InOut" ) then
 	
 	local Populated, Visible
 	
-	local function HandleTransparency( Obj )
-		
-		local Transparency = ThemeUtil.GetThemeFor( "Primary_BackgroundTransparency" )
+	local function HandleTransparency( Obj, Transparency )
 		
 		Obj.BackgroundTransparency = Transparency
 		
@@ -666,7 +664,7 @@ if Gui:FindFirstChild( "InOut" ) then
 		
 	end
 	
-	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { TextTransparency = "Primary_TextTransparency", TextStrokeColor3 = "Primary_TextColor", BackgroundTransparency = HandleTransparency, BackgroundColor3 = Visible and "Selection_Color3" or "Primary_BackgroundColor" } )
+	ThemeUtil.BindUpdate( script.Parent.Frame.InOut, { TextTransparency = "Primary_TextTransparency", TextStrokeColor3 = "Primary_TextColor", Primary_BackgroundTransparency = HandleTransparency, BackgroundColor3 = Visible and "Selection_Color3" or "Primary_BackgroundColor" } )
 
 	Gui.InOut.MouseButton1Click:Connect( function ( )
 
