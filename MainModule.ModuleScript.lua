@@ -6,13 +6,11 @@ if not game:GetService( "StarterGui" ):FindFirstChild( "UniGui" ) then
 	
 	Gui.Parent = game:GetService( "StarterGui" )
 	
-	local Plrs = game:GetService( "Players" ):GetPlayers( )
-	
-	for a = 1, #Plrs do
+	for _, Plr in ipairs( game:GetService( "Players" ):GetPlayers( ) ) do
 		
-		if Plrs[ a ]:FindFirstChild( "PlayerGui" ) and Plrs[ a ].Character and not Plrs[ a ].PlayerGui:FindFirstChild( Gui.Name ) then
+		if Plr:FindFirstChild( "PlayerGui" ) and Plr.Character and not Plr.PlayerGui:FindFirstChild( Gui.Name ) then
 			
-			Gui:Clone( ).Parent = Plrs[ a ].PlayerGui
+			Gui:Clone( ).Parent = Plr.PlayerGui
 			
 		end
 		
@@ -56,6 +54,8 @@ return {
 		
 		Name = "The Robloxian Army Developers TRAD",
 		
+		DivisionOf = 165491,
+		
 		{ { 398245511, 398245716 }, Gray = { 398018105, 398018131 }, Old = { 258663820, 258663857 } }
 		
 	},
@@ -63,6 +63,8 @@ return {
 	[ 4621565 ] = {
 		
 		Name = "The Robloxian Army Valkyrie Unit",
+		
+		DivisionOf = 165491,
 		
 		[ 2 ] = { { 2818975075, 2693327473 } }
 		
@@ -94,6 +96,8 @@ return {
 		
 		Name = "Vortex Security Stormtroopers (VS)",
 		
+		DivisionOf = 199219,
+		
 		{ { 333852983, 333853170 } }
 		
 	},
@@ -102,6 +106,8 @@ return {
 		
 		Name = "Vortex Security: Imperial Fists",
 		
+		DivisionOf = 199219,
+		
 		{ { 339322200, 339322106 } }
 		
 	},
@@ -109,6 +115,8 @@ return {
 	[ 2715765 ] = {
 		
 		Name = "Vortex Security: Kytheriian Sentinels",
+		
+		DivisionOf = 199219,
 		
 		{ { 333852983, 333853170 } }
 		
@@ -136,6 +144,8 @@ return {
 		
 		Name = "WIJ High Command",
 		
+		DivisionOf = 53272,
+		
 		{ { 98096816, 98096836 } }
 		
 	},
@@ -144,6 +154,8 @@ return {
 		
 		Name = "WIJ Officer Council",
 		
+		DivisionOf = 53272,
+		
 		{ { 98096816, 98096836 } }
 		
 	},
@@ -151,6 +163,8 @@ return {
 	[ 275587 ] = {
 		
 		Name = "WIJ Shock Troopers",
+		
+		DivisionOf = 53272,
 		
 		{ { 98096900, 98096927 } }
 		
@@ -683,6 +697,8 @@ return {
 		
 		Name = "Black Wolf Empire || Bloodhounds",
 		
+		DivisionOf = 306324,
+		
 		{ { 207012268,  207033171 } }
 		
 	},
@@ -801,6 +817,8 @@ return {
 		
 		Name = "RSF | Covert Operations",
 		
+		DivisionOf = 14638,
+		
 		{ Battle = { 2524259676, 2524262393 }, Varcia = { 2942587149, 2942589205 } }
 		
 	},
@@ -808,6 +826,8 @@ return {
 	[ 3231711 ] = {
 		
 		Name = "RSF | Medical Unit",
+		
+		DivisionOf = 14638,
 		
 		{ { 1474922407, 1474925592 } }
 		
@@ -827,16 +847,50 @@ return {
 		
 		Name = "The Raven Empire",
 		
-		[ 1 ] = { [ "Standard Armor" ] = { 3072478215, 3072515741 }, [ "Off-duty Fatigues" ] = { 2939967667, 2939970820 } },
-		
-		[ 11 ] = { [ "Winter Armor" ] = { 3055388334, 3055390215 } },
+		[ 1 ] = { [ "Standard Armor" ] = { 3072478215, 3072515741 }, [ "Off-duty Fatigues" ] = { 2939967667, 2939970820 }, [ "Winter Armor" ] = { 3055388334, 3055390215 } },
 		
 		[ 110 ] = { [ "Field Officer" ] = { 3259128977, 3072515741 } },
 		
-		[ 144 ] = { Hicom = { 3393960376, 3393962671 } },
+		[ 144 ] = { [ "Praeceptor Coat" ] = { 3426716496, 3426719278 } },
 		
 		[ 255 ] = { Leader = { 1154100676, 1163292736 } }
 		
+	},
+	
+	[ 3542101 ] = {
+		
+		Name = "Knights of Corvus",
+		
+		DivisionOf = 157284,
+		
+		[ 1 ] = { [ "Knight Armor" ] = { 3421231749, 3421238120 } },
+		
+		[ 252 ] = { [ "Cerberus Armor" ] = { 3421230043, 3421238120 } }
+	
+	},
+	
+	[ 3326117 ] = {
+		
+		Name = "Thorn's Fist",
+		
+		DivisionOf = 157284,
+		
+		[ 1 ] = { [ "Imperial Lancer Armor" ] = { 3124055800, 3124057533 }, [ "Blood Lancer Armor" ] = { 3144502313, 3144503500 } },
+		
+		[ 6 ] = { [ "Imperial Lancer Captains" ] = { 3295697899, 3124057533 } },
+		
+		[ 253 ] = { [ "Imperial Lancer Commander" ] = { 3295699081, 3124057533 } }
+	
+	},
+	
+	[ 4704504 ] = {
+		
+		Name = "Imperial Space Force",
+		
+		DivisionOf = 157284,
+		
+		{ [ "Drone Armor" ] = { 3135599574, 3135602747 } }
+	
 	}
 	  
 }

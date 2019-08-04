@@ -82,13 +82,11 @@ Players.PlayerAdded:Connect( function ( Plr )
 	
 end )
 
-local Plrs = Players:GetPlayers( )
-
-for a = 1, #Plrs do
+for _, Plr in ipairs( Players:GetPlayers( ) ) do
 	
-	Plrs[ a ].CharacterAppearanceLoaded:Connect( function ( Char )
+	Plr.CharacterAppearanceLoaded:Connect( function ( Char )
 		
-		Update( Plrs[ a ], Char )
+		Update( Plr, Char )
 		
 	end )
 	
@@ -194,9 +192,15 @@ function GetUni.OnServerInvoke( Plr )
 				
 				Unis[ b.Name ] = Unis[ b.Name ] or { }
 				
+				if Groups[ b.Id ].DivisionOf and Groups[ Groups[ b.Id ].DivisionOf ] then
+					
+					Unis[ b.Name ].DivisionOf = Groups[ Groups[ b.Id ].DivisionOf ].Name
+					
+				end
+				
 				for c, d in pairs( Groups[ b.Id ] ) do
 					
-					if c ~= "Name" then
+					if type( c ) == "number" then
 						
 						if c <= b.Rank then
 							
@@ -216,9 +220,7 @@ function GetUni.OnServerInvoke( Plr )
 			
 		end
 		
-	end
-	
-	if Debug then
+	else
 		
 		Unis = { }
 		
@@ -229,13 +231,27 @@ function GetUni.OnServerInvoke( Plr )
 			local Name = b.Name or game:GetService( "GroupService" ):GetGroupInfoAsync( a ).Name
 			t = t .. Name .. ", "
 			
-			if b.Name ~= Name then warn( a .. " -" .. Name .. "- is not optimised!" ) end
+			if b.Name ~= Name then warn( a .. " - " .. Name .. " - is not optimised!" ) end
 			
 			Unis[ b.Name ] = Unis[ b.Name ] or { }
 			
+			if b.DivisionOf then
+				
+				if Groups[ b.DivisionOf ] then
+					
+					Unis[ b.Name ].DivisionOf = Groups[ b.DivisionOf ].Name
+					
+				else
+					
+					warn( a .. " - " .. b.Name .. " - could not find the division this group is part of - " .. b.DivisionOf )
+					
+				end
+				
+			end
+			
 			for c, d in pairs( b ) do
 				
-				if c ~= "Name" then
+				if type( c ) == "number" then
 					
 					for c, d in pairs( d ) do
 						
