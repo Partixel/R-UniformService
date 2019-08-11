@@ -1,4 +1,4 @@
-local ThemeUtil = require( game:GetService( "ReplicatedStorage" ):WaitForChild( "ThemeUtil" ) )
+local ThemeUtil = require( game:GetService( "ReplicatedStorage" ):WaitForChild( "ThemeUtil" ):WaitForChild( "ThemeUtil" ) )
 
 while not script.Help.Value do script.Help:GetPropertyChangedSignal( "Value" ):Wait( ) end
 
@@ -18,9 +18,9 @@ local Plr = Players.LocalPlayer
 
 local UserId = Plr.UserId < 0 and 16015142 or Plr.UserId
 
-local Unis, DefaultUni, DefaultTShirt, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "GetUni" ):InvokeServer( )
+local Unis, DefaultUni, DefaultTShirt, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "Uniformed" ):WaitForChild( "GetUni" ):InvokeServer( )
 
-local ChangeUni = game:GetService( "ReplicatedStorage" ):WaitForChild( "ChangeUni" )
+local ChangeUni = game:GetService( "ReplicatedStorage" ):WaitForChild( "Uniformed" ):WaitForChild( "ChangeUni" )
 
 local Gui = script.Parent:WaitForChild( "Frame" )
 
@@ -631,7 +631,7 @@ Gui.Refresh.MouseButton1Click:Connect( function ( )
 	
 	script.Parent.Frame.Refresh.AutoButtonColor = false
 	
-	Unis, DefaultUni, DefaultTShirt, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "GetUni" ):InvokeServer( )
+	Unis, DefaultUni, DefaultTShirt, Selected, SelectedTShirt = game:GetService( "ReplicatedStorage" ):WaitForChild( "Uniformed" ):WaitForChild( "GetUni" ):InvokeServer( )
 	
 	Redraw( )
 	
