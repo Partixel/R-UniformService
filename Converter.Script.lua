@@ -1,18 +1,18 @@
-if not game:GetService( "ServerStorage" ):FindFirstChild( "Uniformed" ) then return end
+if not game:GetService( "ServerStorage" ):FindFirstChild( "Uni" ) then return end
 
-if not game:GetService( "ServerStorage" ).Uniformed:FindFirstChild( "Cache" ) then
+if not game:GetService( "ServerStorage" ).Uni:FindFirstChild( "Cache" ) then
 	
 	local C = Instance.new( "ModuleScript" )
 	
 	C.Name = "Cache"
 	
-	C.Parent = game:GetService( "ServerStorage" ).Uniformed
+	C.Parent = game:GetService( "ServerStorage" ).Uni
 	
 	C.Source = "{}"
 	
 end
 
-local NewCache = game:GetService( "ServerStorage" ).Uniformed.Cache
+local NewCache = game:GetService( "ServerStorage" ).Uni.Cache
 
 local Cache = game.HttpService:JSONDecode( NewCache.Source )
 
@@ -26,7 +26,7 @@ button.ClickableWhenViewportHidden = true
 
 button.Click:Connect(function()
 	
-	local s = game:GetService( "ServerStorage" ).Uniformed.MainModule.Source
+	local s = game:GetService( "ServerStorage" ).Uni.MainModule.Source
 	
 	local b = 0
 	
@@ -96,7 +96,7 @@ button.Click:Connect(function()
 	
 	NewCache.Source = game.HttpService:JSONEncode( Cache )
 	
-	game:GetService( "ServerStorage" ).Uniformed.MainModule.Source = s
+	game:GetService( "ServerStorage" ).Uni.MainModule.Source = s
 	
 	print( "Done" )
 	
