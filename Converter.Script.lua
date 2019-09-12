@@ -36,7 +36,7 @@ button.Click:Connect(function()
 			
 			b = b + 1
 			
-			if tonumber( a ) < 256 or Cache[ a ] == true then do break end end
+			if tonumber( a ) < 256 or Cache[ a ] == true then break end
 			
 			if Cache[ a ] then
 				
@@ -44,7 +44,7 @@ button.Click:Connect(function()
 				
 				s = s:gsub( "%f[%d]" .. a .. "%f[%D]", function ( ... ) return Cache[ a ] end )
 				
-				do break end
+				break
 				
 			end
 			
@@ -54,7 +54,7 @@ button.Click:Connect(function()
 				
 				Cache[ a ] = true
 				
-				do break end
+				break
 				
 			end
 			
@@ -82,7 +82,7 @@ button.Click:Connect(function()
 				
 				s = s:gsub( "%f[%d]" .. a .. "%f[%D]", Ret )
 				
-				do break end
+				break
 				
 			end
 			
