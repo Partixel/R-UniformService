@@ -2,8 +2,6 @@ local LoaderModule = require( game:GetService( "ServerStorage" ):FindFirstChild(
 
 require( game:GetService( "ServerStorage" ):FindFirstChild( "MenuLib" ) and game:GetService( "ServerStorage" ).MenuLib:FindFirstChild( "MainModule" ) or 3717582194 ) -- MenuLib
 
-LoaderModule( script:WaitForChild( "StarterGui" ) )
-
 LoaderModule( script:WaitForChild( "MenuModules" ), game:GetService( "ServerStorage" ):WaitForChild( "MenuModules" ) )
 
 require( game:GetService( "ServerStorage" ):FindFirstChild( "ThemeUtil" ) and game:GetService( "ServerStorage" ).ThemeUtil:FindFirstChild( "MainModule" ) or 2230572960 )

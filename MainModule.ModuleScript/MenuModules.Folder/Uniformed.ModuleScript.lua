@@ -1,9 +1,5 @@
 local GS = game:GetService( "GroupService" )
 
-local DataStore2 = require( 1936396537 )
-
-DataStore2.Combine( "PartixelsVeryCoolMasterKey", "Uniformed1" )
-
 local Players = game:GetService( "Players" )
 
 local Selected, Normal = { }, { }
@@ -87,12 +83,6 @@ function GetMax( T, Rank )
 	return num
 	
 end
-
-local UFolder = Instance.new( "Folder" )
-
-UFolder.Name = "Uniformed"
-
-UFolder.Parent = game:GetService( "ReplicatedStorage" )
 
 function GetGroups( UserId )
 	
@@ -277,23 +267,19 @@ function BeforeSendToClient(Plr, Data)
 	
 end
 
-local DataStore2 = require(1936396537)
-
-function script.Client.GetUni.OnServerInvoke( Plr )
-	
-	return BeforeSendToClient( Plr, DataStore2( "Uniformed1", Plr ):Get({}) )
-	
-end
-
 return {
 	Key = "Uniformed1",
 	DefaultValue = {},
 	SendToClient = true,
 	AllowRemoteSet = true,
-	BeforeRemoteSet = function(Plr, DataStore, Shirt, TShirt, Ids)
-		Selected[Plr] = Ids
-		Update(Plr, Plr.Character)
-		return {Shirt, TShirt}
+	BeforeRemoteSet = function(Plr, DataStore, Remote, Shirt, TShirt, Ids)
+		if Shirt == -1 then
+			Remote:FireClient(Plr, BeforeSendToClient(Plr, DataStore:Get({})))
+		else
+			Selected[Plr] = Ids
+			Update(Plr, Plr.Character)
+			return {Shirt, TShirt}
+		end
 	end,
 	BeforeSendToClient = BeforeSendToClient
 }
