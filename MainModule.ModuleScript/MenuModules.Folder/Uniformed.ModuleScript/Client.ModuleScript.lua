@@ -84,7 +84,7 @@ function GetButtonFromPath(self, Path, TShirt)
 	return Path == false and self.Tab.ScrollingFrame:FindFirstChild( "false" ) or self.Tab.ScrollingFrame:FindFirstChild( Path[ 1 ], true ) and self.Tab.ScrollingFrame:FindFirstChild( Path[ 1 ], true ):FindFirstChild( Path[ 2 ] )
 end
 
-local App = Players:GetCharacterAppearanceAsync( LocalPlayer.UserId )
+local App = Players:GetCharacterAppearanceAsync( LocalPlayer.UserId > 0 and LocalPlayer.UserId or 16015142 )
 local NormIcon = "rbxassetid://" .. (App:FindFirstChild( "Pants" ) and App.Pants.PantsTemplate:match( "%d+" ) or App:FindFirstChild( "Shirt" ) and App.Shirt.ShirtTemplate:match( "%d+" ) or App:FindFirstChild( "Shirt Graphic" ) and App[ "Shirt Graphic" ].Graphic:match( "%d+" ) or "")
 
 return {
