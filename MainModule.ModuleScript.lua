@@ -88,7 +88,7 @@ return {
 		
 	},
 	
-	[ 2673756 ] = {
+	[ 2673758 ] = {
 		
 		Name = "Vortex Security: Imperial Fists",
 		
@@ -98,7 +98,7 @@ return {
 		
 	},
 	
-	[ 2715765 ] = {
+	[ 2715766 ] = {
 		
 		Name = "Vortex Security: Kytheriian Sentinels",
 		
@@ -196,7 +196,7 @@ return {
 		
 	},
 	
-	[ 2630153 ] = {
+	[ 2630154 ] = {
 		
 		Name = "Vaktovian Army Corps: Entrance Program",
 		
@@ -224,7 +224,7 @@ return {
 		
 	},
 	
-	[ 2629076 ] = {
+	[ 2629077 ] = {
 		
 		Name = "Orion Offensive",
 		
@@ -350,7 +350,7 @@ return {
 		
 	},
 	
-	[ 2645745 ] = {
+	[ 2645746 ] = {
 		
 		Name = "Combat Ready Organization",
 		
@@ -454,7 +454,7 @@ return {
 		
 	},
 	
-	[ 2750556 ] = {
+	[ 2750557 ] = {
 		
 		Name = "Super Mutant Unity",
 		
@@ -602,7 +602,7 @@ return {
 		
 	},
 	
-	[ 2654474 ] = {
+	[ 2654475 ] = {
 		
 		Name = "|| Imperial Armada ||",
 		
@@ -867,7 +867,7 @@ return {
 	
 	},
 	
-	[ 4704504 ] = {
+	[ 4704505 ] = {
 		
 		Name = "Imperial Space Force",
 		
@@ -875,6 +875,14 @@ return {
 		
 		{ [ "Drone Armor" ] = { 3135599574, 3135602747 } }
 	
-	}
+	},
+	
+	[ 755709  ] = {
+		
+		Name = "The Vortex Imperium: Royal Guards",
+		
+		{ [ "Votiens" ] = { 2919915915, 2975966584 } }
+	
+	},
 	  
 }

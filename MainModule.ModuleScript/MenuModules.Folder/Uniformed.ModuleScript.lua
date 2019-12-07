@@ -6,6 +6,10 @@ local Selected, Normal = { }, { }
 
 local Loaded = { }
 
+local DebugUserId = 16015142
+
+local Debug = true and game.PlaceId == 1146989110
+
 function Update( Plr, Char )
 	
 	if not Loaded[ Plr ] or not Char then return end
@@ -14,7 +18,7 @@ function Update( Plr, Char )
 		
 		local Selected = Selected[ Plr ] or { }
 		
-		local App = Players:GetCharacterAppearanceAsync( Plr.UserId < 0 and 16015142 or Plr.UserId )
+		local App = Players:GetCharacterAppearanceAsync( Plr.UserId < 0 and DebugUserId or Plr.UserId )
 		
 		local NormShirt, NormPants, NormTShirt = App:FindFirstChild( "Shirt" ) and App.Shirt.ShirtTemplate:match( "%d+" ), App:FindFirstChild( "Pants" ) and App.Pants.PantsTemplate:match( "%d+" ), App:FindFirstChild( "Shirt Graphic" ) and App[ "Shirt Graphic" ].Graphic:match( "%d+" )
 		
@@ -66,13 +70,13 @@ for _, Plr in ipairs( Players:GetPlayers( ) ) do
 	
 end
 
-function GetMax( T, Rank )
+function GetMax( T, Rank, TShirt )
 	
 	local num = -1
 	
 	for a, b in pairs( T ) do
 		
-		if a ~= "Name" and a ~= "DivisionOf" and a <= Rank then
+		if a ~= "Name" and a ~= "DivisionOf" and a <= Rank and (not TShirt or b[1]) then
 			
 			num = math.max( num, a )
 			
@@ -108,15 +112,13 @@ end
 
 Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil Normal[ Plr ] = nil Loaded[ Plr ] = nil end )
 
-local Debug = true and game.PlaceId == 1146989110
-
 local Groups = require( game:GetService( "ServerStorage" ):WaitForChild( "Uniformed" ) )
 
 function BeforeSendToClient(Plr, Data)
 	
-	local UGroups = GetGroups( Plr.UserId < 0 and 16015142 or Plr.UserId )
+	local UGroups = GetGroups( Plr.UserId < 0 and DebugUserId or Plr.UserId )
 
-	local Unis, DefaultUni, DefaultTShirt = { }
+	local Unis, DefaultUni, DefaultTShirt = { }, nil, nil
 	
 	if not Debug then
 		
@@ -136,17 +138,11 @@ function BeforeSendToClient(Plr, Data)
 						
 						DefaultTShirt = { b.Name, GetName( F, true ) }
 						
-						repeat
-							
-							Highest = GetMax( Groups[ b.Id ], Highest - 1 )
-							
-							R = Groups[ b.Id ][ Highest ]
-							
-							if not R then break end
-							
-							F = next( R )
-							
-						until R[ F ][ 1 ] or Highest <= 1
+						Highest = GetMax( Groups[ b.Id ], b.Rank, true )
+						
+						R = Groups[ b.Id ][ Highest ]
+						
+						F = next( R )
 						
 					end
 					
