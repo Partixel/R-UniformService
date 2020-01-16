@@ -110,11 +110,27 @@ function GetName( ShirtName, TShirt )
 	
 end
 
+local Menu Menu = {
+	Key = "Uniformed1",
+	DefaultValue = {},
+	SendToClient = true,
+	AllowRemoteSet = true,
+	BeforeRemoteSet = function(Plr, DataStore, Remote, Shirt, TShirt, Ids)
+		if Shirt == -1 then
+			Remote:FireClient(Plr, Menu.BeforeSendToClient(Plr, DataStore:Get({})))
+		else
+			Selected[Plr] = Ids
+			Update(Plr, Plr.Character)
+			return {Shirt, TShirt}
+		end
+	end,
+}
+
 Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil Normal[ Plr ] = nil Loaded[ Plr ] = nil end )
 
 local Groups = require( game:GetService( "ServerStorage" ):WaitForChild( "Uniformed" ) )
 
-function BeforeSendToClient(Plr, Data)
+function Menu.BeforeSendToClient(Plr, Data)
 	
 	local UGroups = GetGroups( Plr.UserId < 0 and DebugUserId or Plr.UserId )
 
@@ -132,7 +148,16 @@ function BeforeSendToClient(Plr, Data)
 					
 					local R = Groups[ b.Id ][ Highest ]
 					
-					local F = next( R )
+					local F = Menu.DefaultUni and Menu.DefaultUni[b.Id] and Menu.DefaultUni[b.Id][Highest]
+					if F then
+						if type(F) == "string" then
+							F = R[F]
+						else
+							F = Groups[b.Id][F[1]][F[2]]
+						end
+					else
+						F = next( R )
+					end
 					
 					if R[ F ][ 1 ] == nil then
 						
@@ -263,19 +288,4 @@ function BeforeSendToClient(Plr, Data)
 	
 end
 
-return {
-	Key = "Uniformed1",
-	DefaultValue = {},
-	SendToClient = true,
-	AllowRemoteSet = true,
-	BeforeRemoteSet = function(Plr, DataStore, Remote, Shirt, TShirt, Ids)
-		if Shirt == -1 then
-			Remote:FireClient(Plr, BeforeSendToClient(Plr, DataStore:Get({})))
-		else
-			Selected[Plr] = Ids
-			Update(Plr, Plr.Character)
-			return {Shirt, TShirt}
-		end
-	end,
-	BeforeSendToClient = BeforeSendToClient
-}
+return Menu
