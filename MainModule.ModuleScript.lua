@@ -890,5 +890,10 @@ return {
 		{ [ "Votiens" ] = { 2919915915, 2975966584 } }
 	
 	},
-	  
+	[5340099] = {
+		Name = "The Genesis Imperial",
+		[1] = {["Cadet-Sergeant Major"] = {4580062973, 4580063915}},
+		[8] = {["Officer-Marshal"] = {4595386596, 4580063915}},
+		[250] = {["Lieutenant Colonel+"] = {4613702535, 4580063915}},
+	},
 }
