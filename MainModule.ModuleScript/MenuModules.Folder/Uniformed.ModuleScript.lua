@@ -115,6 +115,7 @@ local Menu Menu = {
 	DefaultValue = {},
 	SendToClient = true,
 	AllowRemoteSet = true,
+	PrimaryGroupId = game.CreatorType == Enum.CreatorType.Group and game.CreatorId or nil,
 	BeforeRemoteSet = function(Plr, DataStore, Remote, Shirt, TShirt, Ids)
 		if Shirt == -1 then
 			Remote:FireClient(Plr, Menu.BeforeSendToClient(Plr, DataStore:Get({})))
@@ -138,11 +139,14 @@ function Menu.BeforeSendToClient(Plr, Data)
 	
 	if not Debug then
 		
+		local FoundPlacePrimary
 		for a, b in pairs( UGroups ) do
 			
 			if Groups[ b.Id ] then
 				
-				if b.IsPrimary then
+				if (not FoundPlacePrimary and b.IsPrimary) or b.Id == Menu.PrimaryGroupId then
+					
+					FoundPlacePrimary = b.Id == Menu.PrimaryGroupId
 					
 					local Highest = GetMax( Groups[ b.Id ], b.Rank )
 					
