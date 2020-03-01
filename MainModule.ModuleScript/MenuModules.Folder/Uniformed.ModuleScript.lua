@@ -292,4 +292,24 @@ function Menu.BeforeSendToClient(Plr, Data)
 	
 end
 
+local VH_Func = function(Main)
+	Main.Commands["SetUniform"] = {
+		Alias = {"setuniform", "uniform", "uni"},
+		Description = "Sets the player(s) uniform to the specified uniform",
+		CanRun = "$moderator, $debugger",
+		Category = "character",
+		ArgTypes = {},
+		Callback = function(self, Plr, Cmd, Args, NextCmds, Silent)
+			return true
+		end
+	}
+end
+
+if _G.VH_AddExternalCmds then
+	_G.VH_AddExternalCmds(VH_Func)
+else
+	_G.VH_AddExternalCmdsQueue = _G.VH_AddExternalCmdsQueue or {}
+	_G.VH_AddExternalCmdsQueue[script] = VH_Func
+end
+
 return Menu
