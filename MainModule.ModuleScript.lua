@@ -56,6 +56,16 @@ return {
 		
 	},
 	
+	[ 186633 ] = {
+		
+		Name = "The Robloxian Army Valkyrie Unit",
+		
+		DivisionOf = 165491,
+		
+		[ 2 ] = { { 2818975075, 2693327473 } }
+		
+	},
+	
 	[ 7013 ] = {
 		
 		Name = "The Roblox Assault Team",
