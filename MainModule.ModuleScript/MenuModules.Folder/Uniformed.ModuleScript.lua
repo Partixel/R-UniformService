@@ -153,26 +153,24 @@ function Menu.BeforeSendToClient(Plr, Data)
 					local R = Groups[ b.Id ][ Highest ]
 					
 					local F = Menu.DefaultUni and Menu.DefaultUni[b.Id] and Menu.DefaultUni[b.Id][Highest]
-					if F then
-						if type(F) == "string" then
-							F = R[F]
-						else
-							F = Groups[b.Id][F[1]][F[2]]
-						end
-					else
-						F = next( R )
+					local ShirtF = next(R)
+					if not F then
+						F = ShirtF
+					elseif type(F) ~= "string" then
+						F = F[2]
 					end
 					
-					if R[ F ][ 1 ] == nil then
+					if R[ ShirtF ][ 1 ] == nil then
 						
-						DefaultTShirt = { b.Name, GetName( F, true ) }
+						DefaultTShirt = { b.Name, GetName( ShirtF, true ) }
 						
 						Highest = GetMax( Groups[ b.Id ], b.Rank, true )
 						
 						R = Groups[ b.Id ][ Highest ]
 						
-						F = next( R )
-						
+						if ShirtF == F then
+							F = next( R )
+						end
 					end
 					
 					DefaultUni = { b.Name, GetName( F ) }
