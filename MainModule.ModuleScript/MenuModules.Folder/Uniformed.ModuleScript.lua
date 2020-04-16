@@ -131,7 +131,7 @@ Players.PlayerRemoving:Connect( function( Plr ) Selected[ Plr ] = nil Normal[ Pl
 
 local Groups = require( game:GetService( "ServerStorage" ):WaitForChild( "Uniformed" ) )
 
-function Menu.BeforeSendToClient(Plr, Data)
+function Menu.BeforeSendToClient(Plr, Data, PrimaryGroupId, UniformName)
 	
 	local UGroups = GetGroups( Plr.UserId < 0 and DebugUserId or Plr.UserId )
 
@@ -141,12 +141,19 @@ function Menu.BeforeSendToClient(Plr, Data)
 		
 		local FoundPlacePrimary
 		for a, b in pairs( UGroups ) do
-			
 			if Groups[ b.Id ] then
+				local Primary
+				if b.IsPrimary and Groups[b.Id].DivisionOf and Groups[b.Id].DivisionOf == Menu.PrimaryGroupId then
+					Primary = true
+					FoundPlacePrimary = true
+				elseif not FoundPlacePrimary then
+					if b.IsPrimary or b.Id == Menu.PrimaryGroupId then
+						Primary = true
+						FoundPlacePrimary = b.Id == Menu.PrimaryGroupId
+					end
+				end
 				
-				if (not FoundPlacePrimary and b.IsPrimary) or b.Id == Menu.PrimaryGroupId then
-					
-					FoundPlacePrimary = b.Id == Menu.PrimaryGroupId
+				if Primary then
 					
 					local Highest = GetMax( Groups[ b.Id ], b.Rank )
 					
