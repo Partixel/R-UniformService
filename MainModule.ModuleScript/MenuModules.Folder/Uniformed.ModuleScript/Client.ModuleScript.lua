@@ -89,8 +89,13 @@ end
 local App = Players:GetCharacterAppearanceAsync( LocalPlayer.UserId > 0 and LocalPlayer.UserId or 16015142 )
 local NormIcon = "rbxassetid://" .. (App:FindFirstChild( "Pants" ) and App.Pants.PantsTemplate:match( "%d+" ) or App:FindFirstChild( "Shirt" ) and App.Shirt.ShirtTemplate:match( "%d+" ) or App:FindFirstChild( "Shirt Graphic" ) and App[ "Shirt Graphic" ].Graphic:match( "%d+" ) or "")
 
+local CheckOwnedCache = {}
 local function CheckOwned(ID, ID2, Button)
-	if (not MarketplaceService:GetProductInfo(ID).IsForSale or MarketplaceService:PlayerOwnsAsset(LocalPlayer, ID)) and (not ID2 or not MarketplaceService:GetProductInfo(ID2).IsForSale or MarketplaceService:PlayerOwnsAsset(LocalPlayer, ID2)) then
+	if CheckOwnedCache[ID] or (not ID2 and CheckOwnedCache[ID2]) then
+		Button:Destroy()
+	elseif (not MarketplaceService:GetProductInfo(ID).IsForSale or MarketplaceService:PlayerOwnsAsset(LocalPlayer, ID)) and (not ID2 or not MarketplaceService:GetProductInfo(ID2).IsForSale or MarketplaceService:PlayerOwnsAsset(LocalPlayer, ID2)) then
+		CheckOwnedCache[ID] = true
+		CheckOwnedCache[ID2] = true
 		Button:Destroy()
 	else
 		Button.MouseButton1Click:Connect(function()
@@ -329,7 +334,7 @@ return {
 						
 						ThemeUtil.BindUpdate( { Cat[ "-1" ].OpenIndicator, Cat[ "-1" ].TitleText }, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency", TextColor3 = "Primary_TextColor", TextTransparency = "Primary_TextTransparency" } )
 						
-						ThemeUtil.BindUpdate( { Cat[ "-1" ].BarL, Cat[ "-1" ].BarR, Cat[ "-1" ].BarR2 }, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
+						ThemeUtil.BindUpdate( { Cat.CategoryEnd, Cat[ "-1" ].BarL, Cat[ "-1" ].BarR, Cat[ "-1" ].BarR2 }, { BackgroundColor3 = "Secondary_BackgroundColor", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 						
 						Cat.Name = Key.Name
 						
