@@ -25,10 +25,13 @@ return {
 		DivisionOf = 165491,
 		{{398245511, 398245716}, Gray = {398018105, 398018131}, Old = {258663820, 258663857}}
 	},
-	[4621565] = {
-		Name = "The Robloxian Army Valkyrie Unit",
+	[6310255] = {
+		Name = "The Robloxian Army Shogunate",
 		DivisionOf = 165491,
-		[2] = {{2818975075, 2693327473}}
+		[2] = {Ronin = {5293972755, 5293984586}},
+		[4] = {Kaiju = {5293967109, 5293982270}},
+		[5] = {Sensei = {5293963658, 5293977872}},
+		[6] = {Kanrei = {5293970150, 5293979637}},
 	},
 	[186633] = {
 		Name = "The Robloxian Army elites",
