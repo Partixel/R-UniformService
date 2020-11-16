@@ -8,7 +8,7 @@ local Loaded = { }
 
 local DebugUserId = 16015142
 
-local Debug = true and game.PlaceId == 1146989110
+local Debug = true and game.PlaceId == 5616199692
 
 function Update( Plr, Char )
 	
