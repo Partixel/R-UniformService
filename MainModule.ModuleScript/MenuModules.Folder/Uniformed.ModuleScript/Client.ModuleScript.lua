@@ -378,13 +378,6 @@ return {
 								
 								ThemeUtil.BindUpdate( { New.TopSel, New.BottomSel, New.RightSel }, { BackgroundColor3 = ( ( Shirt and self.Selected == nil ) or ( TShirt and self.SelectedTShirt == nil ) ) and "Positive_Color3" or "Selection_Color3", BackgroundTransparency = "Secondary_BackgroundTransparency" } )
 								
-								if Shirt then
-									
-									New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
-									
-									coroutine.wrap(CheckOwned)(TemplateToId[tostring(Uni[1])], TemplateToId[tostring(Uni[2])], New.BuyButton)
-								end
-								
 								if TShirt then
 									
 									New.BorderColor3 = Color3.fromRGB( 100, 200, 100 )
@@ -396,6 +389,13 @@ return {
 									New.ImageLabel.ImageRectSize = Vector2.new( 0, 0 )
 									
 									coroutine.wrap(CheckOwned)(TemplateToId[tostring(Uni[3])], nil, New.BuyButton)
+								end
+
+								if Shirt then
+
+									New:WaitForChild( "ImageLabel" ).Image = "rbxassetid://" .. ( Uni[ 1 ] or Uni[ 2 ] )
+
+									coroutine.wrap(CheckOwned)(TemplateToId[tostring(Uni[1])], TemplateToId[tostring(Uni[2])], New.BuyButton)
 								end
 								
 								New.ImageLabel.BackgroundColor3 = App[ "Body Colors" ].TorsoColor3
