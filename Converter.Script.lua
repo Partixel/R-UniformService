@@ -21,16 +21,16 @@ button.Click:Connect(function()
 			if tonumber(a) < 256 or Cache[a] == true then break end
 			if Cache[a] then
 				print(a, Cache[a])
-				s = s:gsub("%f[%d]" .. a .. "%f[%D]", function((...) return Cache[a] end)
+				s = s:gsub("%f[%d]" .. a .. "%f[%D]", function(...) return Cache[a] end)
 				break
 			end
 			game["Run Service"].Heartbeat:wait()
-			if pcall(function(() return game.GroupService:GetGroupInfoAsync(tonumber(a)) end) then
+			if pcall(function() return game.GroupService:GetGroupInfoAsync(tonumber(a)) end) then
 				Cache[a] = true
 				break
 			end
 			print("Checking " .. a)
-			local Ran, Ret = pcall(function(()
+			local Ran, Ret = pcall(function()
 				local items = game:GetObjects("http://www.roblox.com/asset/?id=" .. a)
 				local ty = items[1]:IsA("Shirt") and "ShirtTemplate" or items[1]:IsA("Pants") and "PantsTemplate" or items[1]:IsA("ShirtGraphic") and "Graphic"
 				return items[1][ty]:match("%d+")
