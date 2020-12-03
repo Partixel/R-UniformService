@@ -1,13 +1,10 @@
-local GS = game:GetService("GroupService")
-
+local GroupService = game:GetService("GroupService")
 local Players = game:GetService("Players")
 
 local Selected, Normal = {}, {}
-
 local Loaded = {}
 
 local DebugUserId = 16015142
-
 local Debug = true and game.PlaceId == 5616199692
 
 local function Update(Plr, Char)
@@ -53,7 +50,7 @@ end)
 function GetMax(T, Rank, TShirt)
 	local num = -1
 	for a, b in pairs(T) do
-		if a ~= "Name" and a ~= "DivisionOf" and a <= Rank and (not TShirt or b[1]) then
+		if type(a) == "number" and a <= Rank and (not TShirt or b[1]) then
 			num = math.max(num, a)
 		end
 	end
@@ -65,7 +62,7 @@ function GetGroups(UserId)
 	local Ran, Groups
 	while not Ran do
 		Ran, Groups = pcall(function()
-			return GS:GetGroupsAsync(UserId)
+			return GroupService:GetGroupsAsync(UserId)
 		end)
 		if Ran then
 			return Groups
@@ -107,25 +104,25 @@ function Menu.BeforeSendToClient(Plr, Data, PrimaryGroupId, UniformName)
 	local Unis, DefaultUni, DefaultTShirt = {}, nil, nil
 	if not Debug then
 		local FoundPlacePrimary
-		for a, b in pairs(UGroups) do
-			if Groups[b.Id] then
+		for _, GroupData in pairs(UGroups) do
+			if Groups[GroupData.Name] then
 				local Primary
-				if b.IsPrimary and Groups[b.Id].DivisionOf and Groups[b.Id].DivisionOf == Menu.PrimaryGroupId then
+				if GroupData.IsPrimary and Groups[GroupData.Name].DivisionOf and Groups[Groups[GroupData.Name].DivisionOf].Id == Menu.PrimaryGroupId then
 					Primary = true
 					FoundPlacePrimary = true
 				elseif not FoundPlacePrimary then
-					if b.IsPrimary or b.Id == Menu.PrimaryGroupId then
+					if GroupData.IsPrimary or GroupData.Id == Menu.PrimaryGroupId then
 						Primary = true
-						FoundPlacePrimary = b.Id == Menu.PrimaryGroupId
+						FoundPlacePrimary = GroupData.Id == Menu.PrimaryGroupId
 					end
 				end
 				
 				if Primary then
-					local Highest = GetMax(Groups[b.Id], b.Rank)
+					local Highest = GetMax(Groups[GroupData.Name], GroupData.Rank)
 					
-					local R = Groups[b.Id][Highest]
+					local R = Groups[GroupData.Name][Highest]
 					
-					local F = Menu.DefaultUni and Menu.DefaultUni[b.Id] and Menu.DefaultUni[b.Id][Highest]
+					local F = Menu.DefaultUni and Menu.DefaultUni[GroupData.Name] and Menu.DefaultUni[GroupData.Name][Highest]
 					local ShirtF = next(R)
 					if not F then
 						F = ShirtF
@@ -134,28 +131,28 @@ function Menu.BeforeSendToClient(Plr, Data, PrimaryGroupId, UniformName)
 					end
 					
 					if R[ShirtF][1] == nil then
-						DefaultTShirt = {b.Name, GetName(ShirtF, true)}
-						Highest = GetMax(Groups[b.Id], b.Rank, true)
+						DefaultTShirt = {GroupData.Name, GetName(ShirtF, true)}
+						Highest = GetMax(Groups[GroupData.Name], GroupData.Rank, true)
 						
-						R = Groups[b.Id][Highest]
+						R = Groups[GroupData.Name][Highest]
 						if ShirtF == F then
 							F = next(R)
 						end
 					end
 					
-					DefaultUni = {b.Name, GetName(F)}
+					DefaultUni = {GroupData.Name, GetName(F)}
 				end
 				
-				Unis[b.Name] = Unis[b.Name] or {}
-				if Groups[b.Id].DivisionOf and Groups[Groups[b.Id].DivisionOf] then
-					Unis[b.Name].DivisionOf = Groups[Groups[b.Id].DivisionOf].Name
+				Unis[GroupData.Name] = Unis[GroupData.Name] or {}
+				if Groups[GroupData.Name].DivisionOf and Groups[Groups[GroupData.Name].DivisionOf] then
+					Unis[GroupData.Name].DivisionOf = Groups[GroupData.Name].DivisionOf
 				end
 				
-				for c, d in pairs(Groups[b.Id]) do
+				for c, d in pairs(Groups[GroupData.Name]) do
 					if type(c) == "number" then
-						if c <= b.Rank then
+						if c <= GroupData.Rank then
 							for e, f in pairs(d) do
-								Unis[b.Name][GetName(e, not f[1])] = f
+								Unis[GroupData.Name][GetName(e, not f[1])] = f
 							end
 						end
 					end
@@ -164,28 +161,22 @@ function Menu.BeforeSendToClient(Plr, Data, PrimaryGroupId, UniformName)
 		end
 	else
 		local GroupNames = {}
-		for a, b in pairs(Groups) do
-			local Name = b.Name or game:GetService("GroupService"):GetGroupInfoAsync(a).Name
+		for Name, GroupInfo in pairs(Groups) do
 			GroupNames[#GroupNames + 1] = Name
 			
-			if b.Name ~= Name then
-				warn(a .. " - " .. Name .. " - is not optimised!")
-			end
-			
-			Unis[b.Name] = Unis[b.Name] or {}
-			
-			if b.DivisionOf then
-				if Groups[b.DivisionOf] then
-					Unis[b.Name].DivisionOf = Groups[b.DivisionOf].Name
+			Unis[Name] = Unis[Name] or {}
+			if GroupInfo.DivisionOf then
+				if Groups[GroupInfo.DivisionOf] then
+					Unis[Name].DivisionOf = GroupInfo.DivisionOf
 				else
-					warn(a .. " - " .. b.Name .. " - could not find the division this group is part of - " .. b.DivisionOf)
+					warn(Name .. " - could not find the group this division is part of - " .. GroupInfo.DivisionOf)
 				end
 			end
 			
-			for c, d in pairs(b) do
+			for c, d in pairs(GroupInfo) do
 				if type(c) == "number" then
 					for c, d in pairs(d) do
-						Unis[b.Name][GetName(c, not d[1])] = d
+						Unis[Name][GetName(c, not d[1])] = d
 					end
 				end
 			end
