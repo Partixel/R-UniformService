@@ -311,7 +311,17 @@ return {
 	},
 	[85654] = {
 		Name = "Nightfall Clan ",
-		{Combat = {154427077, 154427134}, Specialty = {224748987, 224749035}}
+		{["Official"] = {4805000791, 4805049927}, ["Off-duty"] = {927410705, 129458425, 208233966}}
+	},
+	[4653743] = {
+		Name = "Nightfallen Yurei",
+		DivisionOf = 85654,
+		{{5552042619, 5551859266}}
+	},
+	[5311449] = {
+		Name = "Nightfallen Kami",
+		DivisionOf = 85654,
+		{{4805036736, 4805078179}}
 	},
 	[2654475] = {
 		Name = "|| Imperial Armada ||",
@@ -482,5 +492,10 @@ return {
 		Name = "Vestarian Republic",
 		[1] = {["Off-Duty Jacket (Male)"] = {4808345880, 4808351055, 5290550919}, ["Off-Duty Jacket (Female)"] = {4808345880, 4808348251, 5290550919}, ["Battle Amour Regular"] = {5400146235, 5400148269, 5290550919}, ["Battle Amour Orange"] = {5460789387, 5460799101, 5290550919}, ["Battle Amour Green"] = {5474564314, 5460797399, 5290550919}, ["Battle Amour Purple"] = {5460789887, 5460800688, 5290550919}, ["Battle Amour Gold"] = {5460788180, 5460797863, 5290550919}, ["Battle Amour Dark Blue"] = {5460785967, 5460792801, 5290550919}, ["Battle Amour Teal"] = {5460791311, 5460801304, 5290550919}},
 		[248] = {["Battle Armour HR/HCOM"] = {5401354714, 5401351887, 5290550919}}
+	},
+	[4721242] = {
+		Name = "Frontier Garrison",
+		[1] = {["Combat"] = {6004712701, 6004714862}},
+		[8] = {["Staff Sergeant+"] = {6012806674, 6004714862}},
 	},
 }
